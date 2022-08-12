@@ -51,11 +51,9 @@ async function query(municipality, radius = 10) {
     .join((enter) => enter.append('text').text((d) => d.properties.name));
 
   select('#radius').datum(
-    circle(
-      centroid(
-        featureCollection.features.find(
-          (d) => d.properties.name === municipality,
-        ),
+    buffer(
+      featureCollection.features.find(
+        (d) => d.properties.name === municipality,
       ),
       radius,
       { units: 'kilometers' },
