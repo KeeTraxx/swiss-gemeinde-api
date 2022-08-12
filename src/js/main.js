@@ -42,13 +42,27 @@ async function query(municipality, radius = 10) {
         .style('fill', (_, i) => color(interpolateRainbow(scale(i))))
         .style('stroke', (_, i) =>
           color(interpolateRainbow(scale(i))).brighter(1),
-        ),
+        )
+        .style('opacity', 0)
+        .attr('transform', 'translate(30, -30), rotate(-30)')
+        .transition()
+        .delay((_, i) => i * 30)
+        .style('opacity', 1)
+        .attr('transform', ''),
     );
 
   select('#labels')
     .selectAll('text')
     .data(featureCollection.features, (d) => d.id)
-    .join((enter) => enter.append('text').text((d) => d.properties.name));
+    .join((enter) =>
+      enter
+        .append('text')
+        .text((d) => d.properties.name)
+        .style('opacity', 0)
+        .transition()
+        .delay((_, i) => 1000 + i * 30)
+        .style('opacity', 1),
+    );
 
   select('#radius').datum(
     buffer(
