@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+@import '../node_modules/bulma/bulma.sass';
+
+html,
+body {
+  background-color: #ccc;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+svg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#controls {
+  position: fixed;
+}
+
+text {
+  text-anchor: middle;
+  font-weight: bold;
+  fill: black;
+  text-shadow: 1px 1px 2px #ffffffcc;
+}
+
+#radius {
+  fill: none;
+  stroke: green;
+  stroke-width: 3px;
+  stroke-dasharray: 6 4;
+}
