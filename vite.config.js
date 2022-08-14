@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
-import {svelte} from '@sveltejs/vite-plugin-svelte';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import analyze from 'rollup-plugin-analyzer';
 export default defineConfig({
   server: {
+    port: 3000,
     proxy: {
       '/.netlify': {
         target: 'http://localhost:9999',

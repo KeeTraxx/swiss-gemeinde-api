@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { features as municipalities } from './municipalities.json';
+import { features as municipalities } from '../../data/combined.json';
 import { buffer, featureCollection } from '@turf/turf';
 import booleanIntersects from '@turf/boolean-intersects';
 
