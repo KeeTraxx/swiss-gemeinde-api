@@ -21,6 +21,7 @@
     "bulma": "^0.9.3",
     "d3": "^7.6.1",
     "netlify-cli": "^10.15.0",
+    "node-sass": "^7.0.1",
     "reflect-metadata": "^0.1.13",
     "sass": "^1.54.0",
     "topojson-client": "^3.1.0"
