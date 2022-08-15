@@ -77,15 +77,19 @@
       .transition()
       .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
   }
+
+  function onResize() {
+    console.log('res');
+    proj.fitSize([svg.clientWidth, svg.clientHeight], data);
+    redraw();
+  }
 </script>
 
-<svelte:window on:resize={redraw} />
-
-<svg bind:this={svg}>
+<svelte:window on:resize={onResize} />
+<svg bind:this={svg} on:resize={onResize}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />
 </svg>
-
 {#if data}
 <Legend {scale} />
 {/if}
