@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="320"
+   height="320"
+   viewBox="0 0 84.666663 84.666666"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="favicon.svg"
+   inkscape:export-filename="\\wsl.localhost\Arch\home\kt\projects\schweizer-gemeinde-api\public\favicon.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="1.1893044"
+     inkscape:cx="451.94485"
+     inkscape:cy="259.39532"
+     inkscape:window-width="2560"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:pageshadow="2" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="FG" />
+  <g
+     inkscape:label="BG"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ff0000;stroke-width:0.825391"
+       id="rect168"
+       width="84.666664"
+       height="84.666664"
+       x="-7.1054274e-15"
+       y="0"
+       inkscape:label="bg" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.8px;line-height:1.25;font-family:'Miriam Libre';-inkscape-font-specification:'Miriam Libre';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="3.3370357"
+       y="40.266884"
+       id="text14419"><tspan
+         sodipodi:role="line"
+         id="tspan14417"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.8px;font-family:'Miriam Libre';-inkscape-font-specification:'Miriam Libre';fill:#ffffff;stroke-width:0.264583"
+         x="3.3370357"
+         y="40.266884">S</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.8px;line-height:1.25;font-family:'Miriam Libre';-inkscape-font-specification:'Miriam Libre';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="27.57992"
+       y="61.452232"
+       id="text14419-4"><tspan
+         sodipodi:role="line"
+         id="tspan14417-9"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.8px;font-family:'Miriam Libre';-inkscape-font-specification:'Miriam Libre';fill:#ffffff;stroke-width:0.264583"
+         x="27.57992"
+         y="61.452232">G</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.8px;line-height:1.25;font-family:'Miriam Libre';-inkscape-font-specification:'Miriam Libre';fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="59.399212"
+       y="79.643875"
+       id="text18932"><tspan
+         sodipodi:role="line"
+         id="tspan18930"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.8px;font-family:'Miriam Libre';-inkscape-font-specification:'Miriam Libre';fill:#ffffff;stroke-width:0.264583"
+         x="59.399212"
+         y="79.643875">I</tspan></text>
+  </g>
+</svg>

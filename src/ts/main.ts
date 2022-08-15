@@ -1,5 +1,3 @@
-import Main from '../svelte/Main.svelte'
+import Main from '../svelte/Main.svelte';
 
-console.log('ts');
-
-new Main({target: document.body})
+new Main({ target: document.body });

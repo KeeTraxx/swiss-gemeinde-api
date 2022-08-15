@@ -7,8 +7,8 @@
    viewBox="0 0 253.99999 84.666666"
    version="1.1"
    id="svg5"
-   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
-   sodipodi:docname="Zeichnung.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="logo.svg"
    inkscape:export-filename="Zeichnung.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
@@ -28,14 +28,15 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="1.1893044"
-     inkscape:cx="452.36526"
-     inkscape:cy="258.97491"
-     inkscape:window-width="1920"
-     inkscape:window-height="1137"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:cx="451.94485"
+     inkscape:cy="259.39532"
+     inkscape:window-width="2560"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2" />
+     inkscape:current-layer="layer1"
+     inkscape:pageshadow="2" />
   <defs
      id="defs2" />
   <g
@@ -94,16 +95,16 @@
          id="tspan409"
          style="fill:#000000;stroke-width:1.77783"
          x="99.145355"
-         y="22.521824">Swiss</tspan><tspan
+         y="22.521824">Schweizer</tspan><tspan
          sodipodi:role="line"
          style="fill:#000000;stroke-width:1.77783"
          x="99.145355"
-         y="49.189327"
-         id="tspan559">Municipality</tspan><tspan
+         y="49.189323"
+         id="tspan559">Gemeinde</tspan><tspan
          sodipodi:role="line"
          style="fill:#000000;stroke-width:1.77783"
          x="99.145355"
-         y="75.856819"
-         id="tspan561">Data</tspan></text>
+         y="75.856827"
+         id="tspan561">Info</tspan></text>
   </g>
 </svg>
