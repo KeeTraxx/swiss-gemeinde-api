@@ -1,9 +1,10 @@
 <script lang="ts">
   import './Display.scss';
-  import { afterUpdate } from 'svelte';
+  import { beforeUpdate } from 'svelte';
   import { extent, path, scaleLinear, select } from 'd3';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
+  import Legend from './Legend.svelte';
   export let data;
   let displayedData;
 
@@ -15,9 +16,9 @@
 
   const proj = geoMercator();
   const drawer = geoPath().projection(proj);
-  const scale = scaleLinear().range(['#fff', '#0f0']);
+  let scale = scaleLinear().range(['#fff', '#0f0']).nice();
 
-  afterUpdate(() => {
+  beforeUpdate(() => {
     if (data !== displayedData) {
       dataUpdated();
       metricUpdated();
@@ -56,6 +57,7 @@
       return;
     }
     displayedMetric = metric;
+    scale = scale.copy();
     console.log('metric updated', displayedMetric);
     scale.domain(
       extent(displayedData.features, (d) => d.properties[displayedMetric]),
@@ -70,8 +72,10 @@
       .attr('d', (d) => drawer(d))
       .style('fill', (d) => scale(d.properties[displayedMetric]));
 
-    select(layerLabels).selectAll('text').transition()
-    .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
+    select(layerLabels)
+      .selectAll('text')
+      .transition()
+      .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
   }
 </script>
 
@@ -81,3 +85,7 @@
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />
 </svg>
+
+{#if data}
+<Legend {scale} />
+{/if}
