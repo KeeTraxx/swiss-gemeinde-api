@@ -8,23 +8,26 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "serve": "npm-run-all --parallel serve:*",
-    "serve:client": "vite",
+    "serve:client": "vite --host",
     "serve:functions": "netlify functions:serve",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@netlify/functions": "^1.0.0",
     "@turf/boolean-intersects": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "bulma": "^0.9.3",
-    "d3": "^7.6.1",
-    "netlify-cli": "^10.15.0",
-    "reflect-metadata": "^0.1.13",
-    "sass": "^1.54.0",
-    "topojson-client": "^3.1.0"
+    "d3": "^7.6.1"
   },
   "devDependencies": {
+    "netlify-cli": "^10.15.0",
+    "node-sass": "^7.0.1",
+    "reflect-metadata": "^0.1.13",
+    "sass": "^1.54.0",
+    "svelte-preprocess": "^4.10.7",
+    "topojson-client": "^3.1.0",
+    "@netlify/functions": "^1.0.0",
+    "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "autoprefixer": "^10.3.7",
@@ -42,8 +45,9 @@
     "ts-node": "^10.3.0",
     "tsconfig-paths": "^3.11.0",
     "typescript": "^4.4.3",
-    "vite": "^2.7.4",
-    "vite-plugin-elm": "^2.5.1"
+    "vite": "^3.0.7",
+    "vite-plugin-elm": "^2.5.1",
+    "@types/d3": "^7.4.0"
   },
   "jest": {
     "moduleFileExtensions": [

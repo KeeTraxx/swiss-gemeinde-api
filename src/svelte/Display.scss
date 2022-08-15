@@ -1,0 +1,21 @@
+svg {
+  flex: 1 1;
+  path {
+    fill: grey;
+    stroke: grey;
+    stroke-width: 1px;
+    cursor: pointer;
+
+    &:hover {
+      stroke-width: 2px;
+    }
+  }
+
+  text {
+    text-anchor: middle;
+    font-size: 80%;
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+  }
+}
