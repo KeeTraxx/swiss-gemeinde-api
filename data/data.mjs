@@ -6,9 +6,9 @@ const data = d3
   .parse(fs.readFileSync('./je-d-21.03.01.csv', 'utf-8'))
   .map((entry) => {
     for (let k in entry) {
-      const parsed = parseFloat(entry[k]);
+      const parsed = parseFloat(entry[k].replace('’', ''));
       if (!isNaN(parsed)) {
-        entry[k] = parseFloat(entry[k]);
+        entry[k] = parsed;
       }
     }
     return entry;

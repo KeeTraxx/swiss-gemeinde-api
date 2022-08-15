@@ -1,9 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import {json} from 'd3';
+  import { json } from 'd3';
+
+  let isActive = false;
 
   let municipality = 'Bätterkinden';
   let radius = '10';
+  let metric = 'census_population';
 
   const dispatch = createEventDispatcher();
 
@@ -13,32 +16,135 @@
       `/.netlify/functions/near?${new URLSearchParams({
         municipality,
         radius,
-        details: "true"
+        details: 'true',
       })}`,
     );
-    
+
     dispatch('dataReceived', d);
+  }
+
+  function updateMetric(m) {
+    console.log(m);
+    dispatch('metricUpdated', m);
   }
 </script>
 
-<aside>
-  <form>
-    <label>
-      Gemeinde
-      <input class="input" type="text" bind:value={municipality} />
-    </label>
-    <label>
-      Radius (km)
-      <input class="input" type="number" bind:value={radius} />
-    </label>
-    <input class="button" type="button" value="Suchen" on:click={query} />
-  </form>
-</aside>
+<nav class="navbar" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src="/logo.png" height="28" />
+    </a>
 
-<style lang="scss">
-  aside {
-    position: fixed;
-    right: 0;
-    top: 0;
-  }
-</style>
+    <a
+      role="button"
+      href="#burger"
+      class="navbar-burger {isActive ? 'is-active' : ''}"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarBasicExample"
+      on:click={() => (isActive = !isActive)}
+    >
+      <span aria-hidden="true" />
+      <span aria-hidden="true" />
+      <span aria-hidden="true" />
+    </a>
+  </div>
+
+  <div
+    id="navbarBasicExample"
+    class="navbar-menu {isActive ? 'is-active' : ''}"
+  >
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <input
+          class="input"
+          type="text"
+          bind:value={municipality}
+          placeholder="Gemeinde"
+        />
+      </div>
+      <div class="navbar-item">
+        <input
+          class="input"
+          type="number"
+          bind:value={radius}
+          placeholder="Radius"
+          style="max-width: 5em;"
+        />
+      </div>
+      <div class="navbar-item">
+        <input class="button" type="button" value="Suchen" on:click={query} />
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <select
+          class="select"
+          bind:value={metric}
+          on:change={() => updateMetric(metric)}
+        >
+          <optgroup label="Bevölkerung">
+            <option value="census_population">Einwohner</option>
+            <option value="census_change_%">Veränderung [%]</option>
+            <option value="census_density_km2">Bevölkerungsdichte [pro km²]</option>
+            <option value="census_foreigners_%" >Ausländerquote [%]</option>
+          </optgroup>
+          <optgroup label="Altersverteilung">
+            <option value="age_0-19_%" >0 - 19 Jahre [%]</option>
+            <option value="age_20-64_%" >20 - 64 Jahre [%]</option>
+            <option value="age_65_over_%" >65 Jahre und mehr [%]</option>  
+          </optgroup>
+          <optgroup label="Bevölkerungsbewegung (‰)">
+          <option value="status_marriage_promille" >Rohe Heiratsziffer</option>
+          <option value="status_divorce_promille" >Rohe Scheidungsziffer</option>
+          <option value="status_birthrate_promille" >Rohe Geburtenziffer</option>
+          <option value="status_dying_promille" >Rohe Sterbeziffer</option>
+        </optgroup>
+        <optgroup label="Haushalte">
+          <option value="households_private" >Anzahl Privathaushalte</option>
+          <option value="household_size_average_persons" >Durchschnittliche Anzahl Personen pro Haushalt</option>
+        </optgroup>
+        <optgroup label="Fläache">
+          <option value="area_total_km2" >Gesamtfläche [km²]</option>
+          <option value="area_residential_%" >Siedlungsfläche [%]</option>
+          <option value="area_change_ha" >Veränderung Siedlungsfläche in (1979 - 2004) [ha]</option>
+          <option value="area_agricultural_%" >Landwirtschaftsfläche [%]</option>
+          <option value="area_agricultural_change_ha" >Veränderung Landwirtschaftsfläche in (1979 - 2004) [ha]</option>
+          <option value="area_forest_%" >Wald und Gehölze [%]</option>
+          <option value="area_unproductive_%" >Unproduktive Fläche [%]</option>
+        </optgroup>
+        <optgroup label="Wirtschaft">
+          <option value="economy_employed_total" >Beschäftige Total</option>
+          <option value="economy_employed_sector1" >Beschäftigte 1. Sektor</option>
+          <option value="economy_employed_sector2" >Beschäftigte 2. Sektor</option>
+          <option value="economy_employed_sector3" >Beschäftigte 3. Sektor</option>
+          <option value="economy_businesses_total" >Arbeitsstätten total</option>
+          <option value="economy_businesses_sector1" >Arbeitsstätten 1. Sektor</option>
+          <option value="economy_businesses_sector2" >Arbeitsstätten 2. Sektor</option>
+          <option value="economy_businesses_sector3" >Arbeitsstätten 3. Sektor</option>
+        </optgroup>
+        <optgroup label="Bau- und Wohnungswesen">
+          <option value="residential_empty_residences" >Leerwohnungsziffer</option>
+          <option value="residential_new_residents_per_1000" >Neu gebaute Wohnungen pro 1000 Einwohner</option>
+        </optgroup>
+        <optgroup label="Soziale Sicherheit">
+          <option value="welfare_quote" >Sozialhilfequote</option>
+        </optgroup>
+        <optgroup label="Wähleranteile ausgewählter Parteien (Nationalrat)">
+          <option value="voter_quote_fdp" >FDP</option>
+          <option value="voter_quote_cvp" >CVP</option>
+          <option value="voter_quote_sp" >SP</option>
+          <option value="voter_quote_svp" >SVP</option>
+          <option value="voter_quote_evp_csp" >EVP/CSP</option>
+          <option value="voter_quote_glp" >GLP</option>
+          <option value="voter_quote_bdp" >BDP</option>
+          <option value="voter_quote_pda" >PDA</option>
+          <option value="voter_quote_gps" >GPS</option>
+          <option value="voter_quote_other_right_parties" >Andere Rechtsparteien</option>
+        </optgroup>
+        </select>
+      </div>
+    </div>
+  </div>
+</nav>
