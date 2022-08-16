@@ -1,5 +1,4 @@
 <script lang="ts">
-
   import { afterUpdate } from 'svelte';
   export let scale;
 
@@ -10,8 +9,6 @@
   });
 
   function redraw() {
-    console.log('legend', scale.ticks());
-    console.log(ticks);
     ticks = scale.ticks();
   }
 

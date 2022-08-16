@@ -7,19 +7,9 @@
 
 <h2 align="center">Information about Swiss municipalities</h2>
 
-## Key Features
-
-TODO
-
-## How To Use
-
-TODO
-
 ## Data sources
 
-TODO
-
-## Support
+[Regionalporträts 2021: Kennzahlen aller Gemeinden](https://www.bfs.admin.ch/bfs/de/home/statistiken/regionalstatistik/regionale-portraets-kennzahlen/gemeinden/daten-erlaeuterungen.assetdetail.15864450.html)
 
 ## License
 
