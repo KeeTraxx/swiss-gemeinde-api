@@ -1,8 +1,10 @@
 import {
+  booleanContains,
   buffer,
+  Feature,
   featureCollection,
-  FeatureCollection,
   MultiPolygon,
+  point,
 } from '@turf/turf';
 import { writable, derived } from 'svelte/store';
 import combined from '../../../data/combined.json';
@@ -54,15 +56,31 @@ export interface Metrics {
   voter_quote_other_right_parties: number;
 }
 
-export const query = writable({
-  municipality: 'Bätterkinden',
+export const query = writable<{
+  municipality: Feature<MultiPolygon, Metrics>;
+  radius: number;
+}>({
+  municipality: combined.features.find((d) => d.properties.name === 'Bern'),
   radius: 10,
 });
 
-export const results = derived(query, ({ municipality, radius }) => {
-  const m = combined.features.find((d) => d.properties.name === municipality);
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition((pos) => {
+    const municipality = combined.features
+      .filter((f) => f.geometry.type === 'Polygon')
+      .find((f) =>
+        booleanContains(f, point([pos.coords.longitude, pos.coords.latitude])),
+      );
+    query.set({
+      municipality,
+      radius: 10,
+    });
+  });
+} else {
+}
 
-  const grown = buffer(m, radius, { units: 'kilometers' });
+export const results = derived(query, ({ municipality, radius }) => {
+  const grown = buffer(municipality, radius, { units: 'kilometers' });
 
   const nearMunicipalities = combined.features.filter((m) =>
     booleanIntersects(m, grown),

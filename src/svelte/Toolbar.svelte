@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import AutoComplete from 'simple-svelte-autocomplete';
   import { query, metric } from './store';
-  import { features } from '../../data/municipalities.json';
-  import booleanContains from '@turf/boolean-contains';
-  import { point } from '@turf/turf';
+  import combined from '../../data/combined.json';
 
   let isActive = false;
 
-  let municipality = 'Bätterkinden';
+  let municipality = undefined;
   let radius = 10;
 
   let selectedMetric = 'census_population';
@@ -21,23 +19,6 @@
   function send() {
     query.set({ municipality, radius });
   }
-
-  onMount(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const mun = features
-          .filter((f) => f.geometry.type === 'Polygon')
-          .find((f) =>
-            booleanContains(
-              f,
-              point([pos.coords.longitude, pos.coords.latitude]),
-            ),
-          );
-        municipality = mun.properties.name;
-        send();
-      });
-    }
-  });
 </script>
 
 <nav class="navbar" aria-label="main navigation">
@@ -67,11 +48,10 @@
   >
     <div class="navbar-start">
       <div class="navbar-item">
-        <input
-          class="input"
-          type="text"
-          bind:value={municipality}
-          placeholder="Gemeinde"
+        <AutoComplete
+          items={combined.features}
+          labelFunction={(f) => f.properties.name}
+          bind:selectedItem={municipality}
         />
       </div>
       <div class="navbar-item">

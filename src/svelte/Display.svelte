@@ -1,7 +1,14 @@
 <script lang="ts">
   import './Display.scss';
   import { onMount } from 'svelte';
-  import { extent, path, scaleLinear, select } from 'd3';
+  import {
+    extent,
+    format,
+    scaleLinear,
+    scaleDiverging,
+    select,
+    interpolateRdYlGn,
+  } from 'd3';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
@@ -13,10 +20,12 @@
   let svg;
   let layerBorders;
   let layerLabels;
+  let layerMetrics;
 
   const proj = geoMercator();
   const drawer = geoPath().projection(proj);
-  let scale = scaleLinear().range(['#fff', '#0f0']).nice();
+  let scale = scaleLinear();
+  const numberFormatter = format(',');
 
   onMount(() => {
     rAndM.subscribe(([fc, m]) => {
@@ -24,8 +33,12 @@
         return;
       }
 
-      scale = scale.copy();
-      scale.domain(extent(fc.features, (d) => d.properties[m]));
+      let ext = extent(fc.features, (d) => d.properties[m]);
+      if (ext[0] < 0) {
+        scale = scaleDiverging(interpolateRdYlGn).domain([ext[0], 0, ext[1]]);
+      } else {
+        scale = scaleLinear().domain(ext).range(['#fff', '#0f0']);
+      }
 
       proj.fitSize([svg.clientWidth, svg.clientHeight], fc);
       select(layerBorders)
@@ -37,7 +50,7 @@
             .style('opacity', 0)
             .on('click', (ev, d) =>
               query.update((q) => ({
-                municipality: d.properties.name,
+                municipality: d,
                 radius: q.radius,
               })),
             )
@@ -59,6 +72,21 @@
             .delay((d, i) => 300 + 10 * i)
             .style('opacity', 1),
         );
+
+      select(layerMetrics)
+        .selectAll('text')
+        .data(fc.features, (d) => d.id)
+        .join((enter) =>
+          enter
+            .append('text')
+            .text((d) => d.properties.name)
+            .style('opacity', 0)
+            .attr('y', '1.2em')
+            .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
+            .transition('fade')
+            .delay((d, i) => 300 + 10 * i)
+            .style('opacity', 1),
+        );
       redraw();
     });
   });
@@ -74,6 +102,12 @@
       .selectAll('text')
       .transition('move')
       .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
+
+    select(layerMetrics)
+      .selectAll('text')
+      .transition('move')
+      .text((d) => numberFormatter(d.properties[get(metric)]))
+      .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
   }
 </script>
 
@@ -81,5 +115,6 @@
 <svg bind:this={svg}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />
+  <g bind:this={layerMetrics} />
 </svg>
 <Legend {scale} />
