@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
-  import { json } from 'd3';
+  import { onMount } from 'svelte';
+  import { query, metric } from './store';
   import { features } from '../../data/municipalities.json';
   import booleanContains from '@turf/boolean-contains';
   import { point } from '@turf/turf';
@@ -8,26 +8,18 @@
   let isActive = false;
 
   let municipality = 'Bätterkinden';
-  let radius = '10';
-  let metric = 'census_population';
+  let radius = 10;
 
-  const dispatch = createEventDispatcher();
+  let selectedMetric = 'census_population';
+  metric.subscribe((m) => (selectedMetric = m));
 
-  async function query() {
-    // dispatch('onSubmit', {municipalityName, radius })
-    const d = await json(
-      `/.netlify/functions/near?${new URLSearchParams({
-        municipality,
-        radius,
-        details: 'true',
-      })}`,
-    );
+  query.subscribe((q) => {
+    municipality = q.municipality;
+    radius = q.radius;
+  });
 
-    dispatch('dataReceived', d);
-  }
-
-  function updateMetric(m) {
-    dispatch('metricUpdated', m);
+  function send() {
+    query.set({ municipality, radius });
   }
 
   onMount(() => {
@@ -42,7 +34,7 @@
             ),
           );
         municipality = mun.properties.name;
-        query();
+        send();
       });
     }
   });
@@ -92,7 +84,7 @@
         />
       </div>
       <div class="navbar-item">
-        <input class="button" type="button" value="Suchen" on:click={query} />
+        <input class="button" type="button" value="Suchen" on:click={send} />
       </div>
     </div>
 
@@ -100,8 +92,8 @@
       <div class="navbar-item">
         <select
           class="select"
-          bind:value={metric}
-          on:change={() => updateMetric(metric)}
+          bind:value={selectedMetric}
+          on:change={() => metric.set(selectedMetric)}
         >
           <optgroup label="Bevölkerung">
             <option value="census_population">Einwohner 2019</option>

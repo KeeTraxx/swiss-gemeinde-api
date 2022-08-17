@@ -1,15 +1,15 @@
 <script lang="ts">
   import './Display.scss';
-  import { beforeUpdate } from 'svelte';
+  import { onMount } from 'svelte';
   import { extent, path, scaleLinear, select } from 'd3';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
-  export let data;
-  let displayedData;
+  import { results, metric, query } from './store';
+  import { derived, get } from 'svelte/store';
 
-  export let metric;
-  let displayedMetric;
+  const rAndM = derived([results, metric], (a) => a);
+
   let svg;
   let layerBorders;
   let layerLabels;
@@ -18,78 +18,68 @@
   const drawer = geoPath().projection(proj);
   let scale = scaleLinear().range(['#fff', '#0f0']).nice();
 
-  beforeUpdate(() => {
-    if (data !== displayedData) {
-      dataUpdated();
-      metricUpdated();
-    }
+  onMount(() => {
+    rAndM.subscribe(([fc, m]) => {
+      if (!fc) {
+        return;
+      }
 
-    if (metric !== displayedMetric) {
-      metricUpdated();
-    }
-    redraw();
+      scale = scale.copy();
+      scale.domain(extent(fc.features, (d) => d.properties[m]));
+
+      proj.fitSize([svg.clientWidth, svg.clientHeight], fc);
+      select(layerBorders)
+        .selectAll('path')
+        .data(fc.features, (d) => d.id)
+        .join((enter) =>
+          enter
+            .append('path')
+            .style('opacity', 0)
+            .on('click', (ev, d) =>
+              query.update((q) => ({
+                municipality: d.properties.name,
+                radius: q.radius,
+              })),
+            )
+            .transition('fade')
+            .delay((d, i) => 300 + 10 * i)
+            .style('opacity', 1),
+        );
+
+      select(layerLabels)
+        .selectAll('text')
+        .data(fc.features, (d) => d.id)
+        .join((enter) =>
+          enter
+            .append('text')
+            .text((d) => d.properties.name)
+            .style('opacity', 0)
+            .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
+            .transition('fade')
+            .delay((d, i) => 300 + 10 * i)
+            .style('opacity', 1),
+        );
+      redraw();
+    });
   });
-
-  function dataUpdated() {
-    if (!data) {
-      return;
-    }
-    displayedData = data;
-    proj.fitSize([svg.clientWidth, svg.clientHeight], data);
-    select(layerBorders)
-      .selectAll('path')
-      .data(displayedData.features, (d) => d.id)
-      .join((enter) => enter.append('path'));
-
-    select(layerLabels)
-      .selectAll('text')
-      .data(displayedData.features, (d) => d.id)
-      .join((enter) =>
-        enter
-          .append('text')
-          .text((d) => d.properties.name)
-          .attr('transform', (d) => `translate(${drawer.centroid(d)})`),
-      );
-  }
-
-  function metricUpdated() {
-    if (!displayedData) {
-      return;
-    }
-    displayedMetric = metric;
-    scale = scale.copy();
-    console.log('metric updated', displayedMetric);
-    scale.domain(
-      extent(displayedData.features, (d) => d.properties[displayedMetric]),
-    );
-    console.log(scale.domain());
-  }
 
   function redraw() {
     select(layerBorders)
       .selectAll('path')
-      .transition()
+      .transition('move')
       .attr('d', (d) => drawer(d))
-      .style('fill', (d) => scale(d.properties[displayedMetric]));
+      .style('fill', (d) => scale(d.properties[get(metric)]));
 
     select(layerLabels)
       .selectAll('text')
-      .transition()
+      .transition('move')
       .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
-  }
-
-  function onResize() {
-    console.log('res');
-    proj.fitSize([svg.clientWidth, svg.clientHeight], data);
-    redraw();
   }
 </script>
 
-<svelte:window on:resize={onResize} />
-<svg bind:this={svg} on:resize={onResize}>
+<svelte:window />
+<svg bind:this={svg}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />
 </svg>
-{#if data}
 <Legend {scale} />
-{/if}
