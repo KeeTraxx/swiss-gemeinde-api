@@ -1,5 +1,6 @@
 <script lang="ts">
   import AutoComplete from 'simple-svelte-autocomplete';
+  import { _ } from 'svelte-i18n';
   import { query, metric, addToCompare } from './store';
   import combined from '../../data/combined.json';
 
@@ -67,7 +68,7 @@
       </div>
       <div class="navbar-item">
         <button class="button" on:click={() => addToCompare(municipality)}
-          >Gemeinde vergleichen</button
+          >{$_('compare_municipality')}</button
         >
       </div>
     </div>

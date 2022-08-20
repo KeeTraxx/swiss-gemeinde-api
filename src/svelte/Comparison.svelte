@@ -3,7 +3,6 @@
   import GeoJsonViewer from './GeoJsonViewer.svelte';
   import { compare, removeFromCompare } from './store';
   import metricGroups from '../../data/metrics.json';
-  console.log(metricGroups);
 
   compare.subscribe((m) => (municipalities = m));
 </script>
