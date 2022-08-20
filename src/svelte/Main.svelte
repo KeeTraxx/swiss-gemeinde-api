@@ -2,21 +2,28 @@
   import Display from './Display.svelte';
   import Toolbar from './Toolbar.svelte';
   import Comparison from './Comparison.svelte';
+  import en from './i18n/en.json';
+  import de from './i18n/de.json';
+  import fr from './i18n/fr.json';
+  import it from './i18n/it.json';
+  import { get } from 'svelte/store';
+  import {
+    addMessages,
+    init,
+    getLocaleFromNavigator,
+    dictionary,
+  } from 'svelte-i18n';
 
-  // src/i18n.js
-import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
+  addMessages('en', en);
+  addMessages('de', de);
+  addMessages('fr', fr);
+  addMessages('it', it);
 
-register('en', () => import('./i18n/en.json'));
-register('de', () => import('./i18n/de.json'));
-register('fr', () => import('./i18n/fr.json'));
-register('it', () => import('./i18n/it.json'));
-// en, en-US and pt are not available yet
-
-init({
-  fallbackLocale: 'de',
-  initialLocale: getLocaleFromNavigator(),
-});
-// starts loading 'en-US' and 'en'
+  const b = init({
+    fallbackLocale: 'de',
+    initialLocale: getLocaleFromNavigator(),
+  });
+  console.log(get(dictionary));
 </script>
 
 <main>

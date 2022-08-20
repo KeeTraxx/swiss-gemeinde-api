@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
+
   let municipalities = [];
   import GeoJsonViewer from './GeoJsonViewer.svelte';
   import { compare, removeFromCompare } from './store';
@@ -8,7 +10,7 @@
 </script>
 
 {#if municipalities.length > 0}
-  <aside class="container p-4">
+  <aside class="container">
     <table class="table">
       <tr>
         <th>&nbsp;</th>
@@ -37,11 +39,13 @@
       </tr>
       {#each metricGroups as group}
         <tr>
-          <th style="padding-top: 1.5em;" colspan="99">{group.key}</th>
+          <th style="padding-top: 1.5em;" colspan="99">
+            {$_(`metrics.${group.key}`)}
+          </th>
         </tr>
         {#each group.metrics as metric}
           <tr>
-            <th>{metric}</th>
+            <th>{$_(`metrics.${metric}`)}</th>
             {#each municipalities as m}
               <td class="metric">{m.properties[metric]}</td>
             {/each}
@@ -63,5 +67,9 @@
   td.metric {
     text-align: right;
     width: 10vw;
+  }
+
+  th {
+    width: 10em;
   }
 </style>
