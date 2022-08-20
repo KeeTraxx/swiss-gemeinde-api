@@ -14,10 +14,18 @@
       <tr>
         <th>&nbsp;</th>
         {#each municipalities as m}
-          <td
-            >{m.properties.name}
-            <span on:click={() => removeFromCompare(m)}>X</span></td
-          >
+          <td class="metric">{m.properties.name}</td>
+        {/each}
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        {#each municipalities as m}
+          <td class="metric">
+            <button
+              class="button is-danger"
+              on:click={() => removeFromCompare(m)}>Entfernen</button
+            >
+          </td>
         {/each}
       </tr>
       <tr>
@@ -30,17 +38,16 @@
       </tr>
       {#each metricGroups as group}
         <tr>
-          <th>{group.key}</th>
+          <th style="padding-top: 1.5em;" colspan="99">{group.key}</th>
         </tr>
         {#each group.metrics as metric}
-        <tr>
-          <th>{metric}</th>
-          {#each municipalities as m}
-          <td>{m.properties[metric]}</td>
+          <tr>
+            <th>{metric}</th>
+            {#each municipalities as m}
+              <td class="metric">{m.properties[metric]}</td>
+            {/each}
+          </tr>
         {/each}
-        </tr>
-        {/each}
-
       {/each}
     </table>
   </aside>
@@ -52,5 +59,10 @@
     top: 4em;
     left: 0;
     bottom: 0;
+    overflow-y: auto;
+  }
+  td.metric {
+    text-align: right;
+    width: 10vw;
   }
 </style>
