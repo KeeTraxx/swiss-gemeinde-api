@@ -64,6 +64,20 @@ export const query = writable<{
   radius: 10,
 });
 
+export const compare = writable<Array<Feature<MultiPolygon, Metrics>>>([]);
+
+export function addToCompare(municipality: Feature<MultiPolygon, Metrics>) {
+  compare.update((all) =>
+    !all.includes(municipality) ? [...all, municipality] : all,
+  );
+}
+
+export function removeFromCompare(
+  municipality: Feature<MultiPolygon, Metrics>,
+) {
+  compare.update((all) => all.filter((d) => d.id !== municipality.id));
+}
+
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition((pos) => {
     const municipality = combined.features

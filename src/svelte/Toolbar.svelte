@@ -1,6 +1,6 @@
 <script lang="ts">
   import AutoComplete from 'simple-svelte-autocomplete';
-  import { query, metric } from './store';
+  import { query, metric, addToCompare } from './store';
   import combined from '../../data/combined.json';
 
   let isActive = false;
@@ -17,6 +17,7 @@
   });
 
   function send() {
+    console.log('sending');
     query.set({ municipality, radius });
   }
 </script>
@@ -52,6 +53,7 @@
           items={combined.features}
           labelFunction={(f) => f.properties.name}
           bind:selectedItem={municipality}
+          onChange={send}
         />
       </div>
       <div class="navbar-item">
@@ -64,7 +66,9 @@
         />
       </div>
       <div class="navbar-item">
-        <input class="button" type="button" value="Suchen" on:click={send} />
+        <button class="button" on:click={() => addToCompare(municipality)}
+          >Gemeinde vergleichen</button
+        >
       </div>
     </div>
 
