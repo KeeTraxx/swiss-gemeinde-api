@@ -1,0 +1,76 @@
+[
+  {
+    "key": "census",
+    "metrics": [
+      "census_population",
+      "census_change_%",
+      "census_density_km2",
+      "census_foreigners_%"
+    ]
+  },
+  {
+    "key": "age_distribution",
+    "metrics": ["age_0-19_%", "age_20-64_%", "age_65_over_%"]
+  },
+  {
+    "key": "population_movement",
+    "metrics": [
+      "status_marriage_promille",
+      "status_divorce_promille",
+      "status_birthrate_promille",
+      "status_dying_promille"
+    ]
+  },
+  {
+    "key": "households",
+    "metrics": ["households_private", "household_size_average_persons"]
+  },
+  {
+    "key": "area",
+    "metrics": [
+      "area_total_km2",
+      "area_residential_%",
+      "area_change_ha",
+      "area_agricultural_%",
+      "area_agricultural_change_ha",
+      "area_forest_%",
+      "area_unproductive_%"
+    ]
+  },
+  {
+    "key": "economy",
+    "metrics": [
+      "economy_employed_total",
+      "economy_employed_sector1",
+      "economy_employed_sector2",
+      "economy_employed_sector3",
+      "economy_businesses_total",
+      "economy_businesses_sector1",
+      "economy_businesses_sector2",
+      "economy_businesses_sector3"
+    ]
+  },
+  {
+    "key": "condo",
+    "metrics": [
+      "residential_empty_residences",
+      "residential_new_residents_per_1000"
+    ]
+  },
+  { "key": "social_security", "metrics": ["welfare_quote"] },
+  {
+    "key": "voter_quotes",
+    "metrics": [
+      "voter_quote_fdp",
+      "voter_quote_cvp",
+      "voter_quote_sp",
+      "voter_quote_svp",
+      "voter_quote_evp_csp",
+      "voter_quote_glp",
+      "voter_quote_bdp",
+      "voter_quote_pda",
+      "voter_quote_gps",
+      "voter_quote_other_right_parties"
+    ]
+  }
+]

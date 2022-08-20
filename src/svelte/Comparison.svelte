@@ -1,26 +1,50 @@
 <script lang="ts">
   let municipalities = [];
+  import GeoJsonViewer from './GeoJsonViewer.svelte';
   import { compare, removeFromCompare } from './store';
+  import metricGroups from '../../data/metrics.json';
+  console.log(metricGroups);
 
   compare.subscribe((m) => (municipalities = m));
 </script>
 
-<aside class="container p-4">
-  <table class="table">
-    <tr>
-      <th>Name</th>
-      {#each municipalities as m}
-        <td>{m.properties.name}</td>
+{#if municipalities.length > 0}
+  <aside class="container p-4">
+    <table class="table">
+      <tr>
+        <th>&nbsp;</th>
+        {#each municipalities as m}
+          <td
+            >{m.properties.name}
+            <span on:click={() => removeFromCompare(m)}>X</span></td
+          >
+        {/each}
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        {#each municipalities as m}
+          <td>
+            <GeoJsonViewer geoJson={m} />
+          </td>
+        {/each}
+      </tr>
+      {#each metricGroups as group}
+        <tr>
+          <th>{group.key}</th>
+        </tr>
+        {#each group.metrics as metric}
+        <tr>
+          <th>{metric}</th>
+          {#each municipalities as m}
+          <td>{m.properties[metric]}</td>
+        {/each}
+        </tr>
+        {/each}
+
       {/each}
-    </tr>
-    <tr>
-      <th>Stuff</th>
-      {#each municipalities as m}
-        <td>{m.properties['age_0-19_%']}</td>
-      {/each}
-    </tr>
-  </table>
-</aside>
+    </table>
+  </aside>
+{/if}
 
 <style lang="scss">
   aside {
