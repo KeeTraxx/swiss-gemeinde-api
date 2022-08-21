@@ -72,4 +72,20 @@
   th {
     width: 10em;
   }
+
+  tr:nth-child(1) > * {
+    position: sticky;
+    top: 0;
+    background-color: white;
+  }
+  tr:nth-child(2) > * {
+    position: sticky;
+    top: 2em;
+    background-color: white;
+  }
+  tr:nth-child(3) > * {
+    position: sticky;
+    top: 5em;
+    background-color: white;
+  }
 </style>

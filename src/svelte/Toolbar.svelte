@@ -26,7 +26,7 @@
 
   function changeLang(l) {
     window.localStorage.setItem('lang', l);
-    window.location.reload();
+    locale.set(l);
   }
 </script>
 
