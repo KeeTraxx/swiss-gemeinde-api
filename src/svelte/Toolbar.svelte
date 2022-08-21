@@ -9,6 +9,7 @@
 
   let municipality = undefined;
   let radius = 10;
+  let lang = 'de';
 
   let selectedMetric = 'census_population';
   metric.subscribe((m) => (selectedMetric = m));
@@ -79,6 +80,21 @@
         <select
           class="select"
           bind:value={selectedMetric}
+          on:change={() => metric.set(selectedMetric)}
+        >
+          {#each metricGroups as group}
+            <optgroup label={$_(`metrics.${group.key}`)}>
+              {#each group.metrics as m}
+                <option value={m}>{$_(`metrics.${m}`)}</option>
+              {/each}
+            </optgroup>
+          {/each}
+        </select>
+      </div>
+      <div class="navbar-item">
+        <select
+          class="select"
+          bind:value={lang}
           on:change={() => metric.set(selectedMetric)}
         >
           {#each metricGroups as group}
