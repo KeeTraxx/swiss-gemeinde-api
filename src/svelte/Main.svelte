@@ -6,13 +6,7 @@
   import de from './i18n/de.json';
   import fr from './i18n/fr.json';
   import it from './i18n/it.json';
-  import { get } from 'svelte/store';
-  import {
-    addMessages,
-    init,
-    getLocaleFromNavigator,
-    dictionary,
-  } from 'svelte-i18n';
+  import { addMessages, init } from 'svelte-i18n';
 
   addMessages('en', en);
   addMessages('de', de);
