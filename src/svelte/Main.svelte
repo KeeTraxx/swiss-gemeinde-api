@@ -21,9 +21,8 @@
 
   init({
     fallbackLocale: 'de',
-    initialLocale: window.localStorage.getItem('lang') || getLocaleFromNavigator(),
+    initialLocale: window.localStorage.getItem('lang'),
   });
-  console.log(get(dictionary));
 </script>
 
 <main>
