@@ -1,6 +1,6 @@
 <script lang="ts">
   import AutoComplete from 'simple-svelte-autocomplete';
-  import { _ } from 'svelte-i18n';
+  import { _, locale } from 'svelte-i18n';
   import { query, metric, addToCompare } from './store';
   import combined from '../../data/combined.json';
   import metricGroups from '../../data/metrics.json';
@@ -9,7 +9,7 @@
 
   let municipality = undefined;
   let radius = 10;
-  let lang = 'de';
+  let lang = $locale;
 
   let selectedMetric = 'census_population';
   metric.subscribe((m) => (selectedMetric = m));
@@ -22,6 +22,11 @@
   function send() {
     console.log('sending', { municipality, radius });
     query.set({ municipality, radius });
+  }
+
+  function changeLang(l) {
+    window.localStorage.setItem('lang', l);
+    window.location.reload();
   }
 </script>
 
@@ -95,15 +100,12 @@
         <select
           class="select"
           bind:value={lang}
-          on:change={() => metric.set(selectedMetric)}
+          on:change={() => changeLang(lang)}
         >
-          {#each metricGroups as group}
-            <optgroup label={$_(`metrics.${group.key}`)}>
-              {#each group.metrics as m}
-                <option value={m}>{$_(`metrics.${m}`)}</option>
-              {/each}
-            </optgroup>
-          {/each}
+          <option>de</option>
+          <option>fr</option>
+          <option>it</option>
+          <option>en</option>
         </select>
       </div>
     </div>

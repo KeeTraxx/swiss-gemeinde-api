@@ -19,9 +19,9 @@
   addMessages('fr', fr);
   addMessages('it', it);
 
-  const b = init({
+  init({
     fallbackLocale: 'de',
-    initialLocale: getLocaleFromNavigator(),
+    initialLocale: window.localStorage.getItem('lang') || getLocaleFromNavigator(),
   });
   console.log(get(dictionary));
 </script>
