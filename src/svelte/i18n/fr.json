@@ -1,5 +1,8 @@
 {
-  "ui": { "compare_municipality": "Comparer la commune" },
+  "ui": {
+    "compare_municipality": "Comparer la commune",
+    "remove_municipality": "Enlever"
+  },
   "metrics": {
     "census": "Population",
     "census_population": "Résidents 2019",

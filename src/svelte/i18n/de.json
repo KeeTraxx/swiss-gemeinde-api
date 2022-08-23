@@ -1,5 +1,8 @@
 {
-  "ui": { "compare_municipality": "Gemeinde vergleichen" },
+  "ui": {
+    "compare_municipality": "Gemeinde vergleichen",
+    "remove_municipality": "Entfernen"
+  },
   "metrics": {
     "census": "Bevölkerung",
     "census_population": "Einwohner 2019",
@@ -27,7 +30,7 @@
     "area_forest_%": "Wald und Gehölze [%] 2004",
     "area_unproductive_%": "Unproduktive Fläche [%] 2004",
     "economy": "Wirtschaft",
-    "economy_employed_total": "Beschäftige Total 2018",
+    "economy_employed_total": "Beschäftigte Total 2018",
     "economy_employed_sector1": "Beschäftigte 1. Sektor 2018",
     "economy_employed_sector2": "Beschäftigte 2. Sektor 2018",
     "economy_employed_sector3": "Beschäftigte 3. Sektor 2018",
