@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Router from 'svelte-spa-router';
   import Display from './Display.svelte';
   import Toolbar from './Toolbar.svelte';
   import Comparison from './Comparison.svelte';
@@ -17,12 +18,19 @@
     fallbackLocale: 'de',
     initialLocale: window.localStorage.getItem('lang'),
   });
+
+  const routes = {
+    // Exact path
+    '/': Display,
+
+    // Using named parameters, with last being optional
+    '/compare/:ids': Comparison,
+}
 </script>
 
 <main>
   <Toolbar />
-  <Display />
-  <Comparison />
+  <Router {routes} />
 </main>
 
 <style lang="scss">

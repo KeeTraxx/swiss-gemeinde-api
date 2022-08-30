@@ -1,5 +1,6 @@
 <script lang="ts">
   import './Display.scss';
+  import Inspector from './Inspector.svelte';
   import { onMount } from 'svelte';
   import {
     extent,
@@ -16,6 +17,8 @@
   import { derived, get } from 'svelte/store';
 
   const rAndM = derived([results, metric], (a) => a);
+
+  let inspect = undefined;
 
   let svg;
   let layerBorders;
@@ -48,12 +51,13 @@
           enter
             .append('path')
             .style('opacity', 0)
-            .on('click', (ev, d) =>
+            .on('click', (ev, d) => {
               query.update((q) => ({
                 municipality: d,
                 radius: q.radius,
-              })),
-            )
+              }))
+              inspect = d
+            })
             .transition('fade')
             .delay((d, i) => 300 + 10 * i)
             .style('opacity', 1),
@@ -91,6 +95,11 @@
     });
   });
 
+  function onResize() {
+    proj.fitSize([svg.clientWidth, svg.clientHeight], get(results));
+    redraw();
+  }
+
   function redraw() {
     select(layerBorders)
       .selectAll('path')
@@ -111,7 +120,9 @@
   }
 </script>
 
-<svelte:window />
+<svelte:window on:resize={() => onResize()} />
+
+<Inspector {inspect} />
 <svg bind:this={svg}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />
