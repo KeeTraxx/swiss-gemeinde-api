@@ -10,6 +10,7 @@
     select,
     interpolateRdYlGn,
   } from 'd3';
+  import { buffer } from '@turf/turf';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
@@ -43,7 +44,7 @@
         scale = scaleLinear().domain(ext).range(['#fff', '#0f0']);
       }
 
-      proj.fitSize([svg.clientWidth, svg.clientHeight], fc);
+      onResize();
       select(layerBorders)
         .selectAll('path')
         .data(fc.features, (d) => d.id)
@@ -55,8 +56,8 @@
               query.update((q) => ({
                 municipality: d,
                 radius: q.radius,
-              }))
-              inspect = d
+              }));
+              inspect = d;
             })
             .transition('fade')
             .delay((d, i) => 300 + 10 * i)
@@ -96,7 +97,14 @@
   });
 
   function onResize() {
-    proj.fitSize([svg.clientWidth, svg.clientHeight], get(results));
+    console.log(buffer(get(query).municipality, 4, { units: 'kilometers' }));
+    proj.fitSize(
+      [svg.clientWidth, svg.clientHeight],
+      buffer(get(query).municipality, 4, { units: 'kilometers' }),
+    );
+    select(svg).append('path')
+      .datum([buffer(get(query).municipality, 4, { units: 'kilometers' })])
+      .attr('d', d => drawer(d))
     redraw();
   }
 
