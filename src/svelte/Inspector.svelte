@@ -1,32 +1,25 @@
 <script lang="ts">
-  import {afterUpdate} from 'svelte';
   import {link} from 'svelte-spa-router';
   import { _ } from 'svelte-i18n';
-  import { metric, addToCompare, compare } from './store';
-  import { get } from 'svelte/store';
+  import { addToCompare, compare, payload, route, metric } from './store';
   export let inspect;
-  let m;
-  let municipalityIds = [];
-  metric.subscribe((selectedMetric) => {
-    console.log(selectedMetric, inspect);
-    m = inspect?.properties[selectedMetric];
-  });
 
-  compare.subscribe(all => municipalityIds = all.map(d => d.id));
-
-  afterUpdate(() => {
-    m = inspect?.properties[get(metric)];
-  });
+  function navigateToCompare() {
+    $route = 'c';
+    $payload = $compare.map(f => encodeURIComponent(f.properties.name)).join('|');
+  }
 </script>
 
 {#if inspect}
   <div class="container">
     <h3>{inspect.properties.name}</h3>
-    <p>{m}</p>
+    <p>{inspect.properties[$metric]}</p>
     <button class="button" on:click={() => addToCompare(inspect)}>
       {$_('ui.compare_municipality')}
     </button>
-    <a href="/compare/{$compare.map(d => d.properties.name).map(encodeURIComponent).join('|')}/${metric}" use:link>Compare {municipalityIds.length} municipalities</a>
+    <button class="button" on:click={navigateToCompare}>
+      To comparison
+    </button>
   </div>
 {/if}
 

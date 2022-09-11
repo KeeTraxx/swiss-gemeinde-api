@@ -3,6 +3,7 @@
   import './Display.scss';
   import Inspector from './Inspector.svelte';
   import { afterUpdate } from 'svelte';
+  import { payload } from './store';
   import { extent, format, interpolateRdYlGn, interpolateYlGn, scaleDiverging, select } from 'd3';
   import { buffer, rewind } from '@turf/turf';
   import { geoPath } from 'd3';
@@ -47,7 +48,8 @@
           .append('path')
           .style('opacity', 0)
           .on('click', (ev, d) => {
-            push(`/${encodeURIComponent(d.properties.name)}/${encodeURIComponent(metric)}`);
+            // push(`/m/${encodeURIComponent(d.properties.name)}/${encodeURIComponent(metric)}`);
+            $payload = d.properties.name;
             inspect = d;
           })
           .transition('fade')
@@ -128,7 +130,7 @@
 
 <svelte:window on:resize={() => onResize()} />
 
-<Inspector {inspect} />
+<Inspector {inspect} {metric} />
 <svg bind:this={svg}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />

@@ -9,6 +9,7 @@
   import fr from './i18n/fr.json';
   import it from './i18n/it.json';
   import { addMessages, init } from 'svelte-i18n';
+  import {payload} from './store';
   import municipalityService from './municipality.service';
 
   addMessages('en', en);
@@ -25,27 +26,23 @@
     console.log('location', l);
     if (l === '/') {
       const f = await municipalityService.findByGeolocation();
-      replace(`/${f.properties.name}/census_population`);
+      $payload = f.properties.name;
     }
   })
 
   const routes = {
-    '/compare/:municipalityNames/:metric': Comparison,
-    '/:municipalityName/:metric': Display,
+    '/c/:municipalityNames/:metric': Comparison,
+    '/m/:municipalityName/:metric': Display,
   };
 
   let municipalityName;
   let selectedMetric;
 
-  function onRouteLoaded(ev) {
-    municipalityName = ev.detail?.params?.municipalityName ?? municipalityName;
-    selectedMetric = ev.detail?.params?.metric ?? selectedMetric;
-  }
 </script>
 
 <main>
-  <Toolbar {municipalityName} {selectedMetric} />
-  <Router {routes} on:routeLoaded={onRouteLoaded} />
+  <Toolbar />
+  <Router {routes} />
 </main>
 
 <style lang="scss">

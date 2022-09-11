@@ -4,7 +4,7 @@
 
   import AutoComplete from 'simple-svelte-autocomplete';
   import { _, locale } from 'svelte-i18n';
-  import { metric } from './store';
+  import { route, metric, payload } from './store';
   import combined from '../../data/combined.json';
   import metricGroups from '../../data/metrics.json';
   import municipalityService from './municipality.service';
@@ -19,20 +19,27 @@
   export let selectedMetric = 'census_population';
   metric.subscribe((m) => (selectedMetric = m));
 
-  function send() {
-    if (municipality) {
-      push(`/${encodeURIComponent(municipality.properties.name)}/${encodeURIComponent(selectedMetric)}`)
+  function changeLang(l) {
+    window.localStorage.setItem('lang', l);
+    $locale = l;
+  }
+
+  function onSelectMunicipality(f) {
+    if (!f) {
+      return;
+    }
+    if ($route === 'c') {
+      if (!$payload.split('|').includes(f.properties.name)) {
+        $payload = `${$payload}|${f.properties.name}`
+      }
+    } else {
+      $payload = f.properties.name;
     }
   }
 
-  function changeLang(l) {
-    window.localStorage.setItem('lang', l);
-    locale.set(l);
-  }
-
   afterUpdate(() => {
-    municipality = municipalityService.findByName( municipalityName);
-  })
+    municipality = municipalityService.findByName($payload);
+  });
 </script>
 
 <nav class="navbar" aria-label="main navigation">
@@ -66,7 +73,7 @@
           items={combined.features}
           labelFunction={(f) => f.properties.name}
           bind:selectedItem={municipality}
-          onChange={send}
+          onChange={onSelectMunicipality}
         />
       </div>
     </div>
