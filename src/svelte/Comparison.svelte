@@ -1,16 +1,20 @@
 <script lang="ts">
+  import { afterUpdate } from 'svelte';
   import { _ } from 'svelte-i18n';
-  import {params} from 'svelte-spa-router';
 
-  let municipalities = [];
   import GeoJsonViewer from './GeoJsonViewer.svelte';
   import { compare, removeFromCompare, addToCompare } from './store';
   import metricGroups from '../../data/metrics.json';
   import combined from '../../data/combined.json';
+  let municipalities = [];
+  export let params;
+  import municipalityService from './municipality.service';
 
-  params.subscribe(d => console.log('params', d?.ids.split(',').map(parseInt).map(id => combined.features.find(f => f.id === id)).filter(Boolean).forEach(addToCompare)));
+  afterUpdate(() => {
+    municipalities = params.municipalityNames.split('|')
+      .map(municipalityService.findByName);
+  });
 
-  compare.subscribe((m) => (municipalities = m));
 </script>
 
 {#if municipalities.length > 0}

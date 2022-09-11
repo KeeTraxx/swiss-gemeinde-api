@@ -1,33 +1,38 @@
 <script lang="ts">
+    import { push, location } from 'svelte-spa-router';
+    import {afterUpdate} from 'svelte';
+
   import AutoComplete from 'simple-svelte-autocomplete';
   import { _, locale } from 'svelte-i18n';
-  import { query, metric } from './store';
+  import { metric } from './store';
   import combined from '../../data/combined.json';
   import metricGroups from '../../data/metrics.json';
+  import municipalityService from './municipality.service';
+
+  export let municipalityName;
 
   let isActive = false;
 
   let municipality = undefined;
-  let radius = 10;
   let lang = $locale;
 
-  let selectedMetric = 'census_population';
+  export let selectedMetric = 'census_population';
   metric.subscribe((m) => (selectedMetric = m));
 
-  query.subscribe((q) => {
-    municipality = q.municipality;
-    radius = q.radius;
-  });
-
   function send() {
-    console.log('sending', { municipality, radius });
-    query.set({ municipality, radius });
+    if (municipality) {
+      push(`/${encodeURIComponent(municipality.properties.name)}/${encodeURIComponent(selectedMetric)}`)
+    }
   }
 
   function changeLang(l) {
     window.localStorage.setItem('lang', l);
     locale.set(l);
   }
+
+  afterUpdate(() => {
+    municipality = municipalityService.findByName( municipalityName);
+  })
 </script>
 
 <nav class="navbar" aria-label="main navigation">
@@ -62,15 +67,6 @@
           labelFunction={(f) => f.properties.name}
           bind:selectedItem={municipality}
           onChange={send}
-        />
-      </div>
-      <div class="navbar-item">
-        <input
-          class="input"
-          type="number"
-          bind:value={radius}
-          placeholder="Radius"
-          style="max-width: 5em;"
         />
       </div>
     </div>

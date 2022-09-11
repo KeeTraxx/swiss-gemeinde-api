@@ -26,7 +26,7 @@
     <button class="button" on:click={() => addToCompare(inspect)}>
       {$_('ui.compare_municipality')}
     </button>
-    <a href="/compare/{municipalityIds.join(',')}" use:link>Compare {municipalityIds.length} municipalities</a>
+    <a href="/compare/{$compare.map(d => d.properties.name).map(encodeURIComponent).join('|')}/${metric}" use:link>Compare {municipalityIds.length} municipalities</a>
   </div>
 {/if}
 
