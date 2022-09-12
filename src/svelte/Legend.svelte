@@ -1,6 +1,8 @@
 <script lang="ts">
   import { afterUpdate } from 'svelte';
+  import {formatByField} from './number-format';
 
+  export let metric;
   let ticks = [];
   export let scale;
 
@@ -9,7 +11,7 @@
 <div>
   <ul>
     {#each scale.ticks() as tick}
-      <li><span style="color: {scale(tick)}">&#9632;</span> {tick}</li>
+      <li><span style="color: {scale(tick)}">&#9632;</span> {formatByField(metric)(tick)}</li>
     {/each}
   </ul>
 </div>

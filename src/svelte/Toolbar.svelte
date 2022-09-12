@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { push, location } from 'svelte-spa-router';
     import {afterUpdate} from 'svelte';
 
   import AutoComplete from 'simple-svelte-autocomplete';
@@ -86,7 +85,7 @@
           {#each metricGroups as group}
             <optgroup label={$_(`metrics.${group.key}`)}>
               {#each group.metrics as m}
-                <option value={m}>{$_(`metrics.${m}`)}</option>
+                <option value={m.name}>{$_(`metrics.${m.name}`)}</option>
               {/each}
             </optgroup>
           {/each}

@@ -2,6 +2,7 @@
   import { _ } from 'svelte-i18n';
   import { payload, route, metric } from './store';
   export let inspect;
+  import {formatByField} from './number-format';
 
   function navigateToCompare() {
     $route = 'c';
@@ -12,7 +13,7 @@
 {#if inspect}
   <div class="container">
     <h3>{inspect.properties.name}</h3>
-    <p>{inspect.properties[$metric]}</p>
+    <p>{formatByField($metric)(inspect.properties[$metric])}</p>
     <button class="button" on:click={() => navigateToCompare()}>
       {$_('ui.compare_municipality')}
     </button>

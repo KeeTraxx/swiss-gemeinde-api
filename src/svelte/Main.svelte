@@ -1,6 +1,6 @@
 <script lang="ts">
   import Router from 'svelte-spa-router';
-  import {location, replace} from 'svelte-spa-router';
+  import {location} from 'svelte-spa-router';
   import Display from './Display.svelte';
   import Toolbar from './Toolbar.svelte';
   import Comparison from './Comparison.svelte';
@@ -11,6 +11,16 @@
   import { addMessages, init } from 'svelte-i18n';
   import {payload} from './store';
   import municipalityService from './municipality.service';
+import { formatDefaultLocale } from 'd3';
+
+  formatDefaultLocale({
+    currency: ["", "CHF"],
+    decimal: ".",
+    grouping: [3],
+    thousands: "'",
+    minus: "-",
+    nan: "",
+  });
 
   addMessages('en', en);
   addMessages('de', de);
@@ -34,10 +44,6 @@
     '/c/:municipalityNames/:metric': Comparison,
     '/m/:municipalityName/:metric': Display,
   };
-
-  let municipalityName;
-  let selectedMetric;
-
 </script>
 
 <main>

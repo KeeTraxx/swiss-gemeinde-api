@@ -7,6 +7,7 @@
   let municipalities = [];
   export let params;
   import municipalityService from './municipality.service';
+  import {formatByField} from './number-format';
 
   afterUpdate(() => {
     municipalities = params.municipalityNames.split('|')
@@ -62,9 +63,9 @@
         </tr>
         {#each group.metrics as metric}
           <tr>
-            <th>{$_(`metrics.${metric}`)}</th>
+            <th>{$_(`metrics.${metric.name}`)}</th>
             {#each municipalities as m}
-              <td class="metric">{m.properties[metric]}</td>
+              <td class="metric">{formatByField(metric.name)(m.properties[metric.name])}</td>
             {/each}
           </tr>
         {/each}

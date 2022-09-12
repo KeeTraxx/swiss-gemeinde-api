@@ -9,7 +9,7 @@
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
   import municipalityService from './municipality.service';
-
+  import {formatByField} from './number-format';
   export let params;
 
   let inspect = undefined;
@@ -21,7 +21,6 @@
 
   const proj = geoMercator();
   const drawer = geoPath().projection(proj);
-  const numberFormatter = format(',');
 
   let municipality;
   let metric;
@@ -77,7 +76,6 @@
       .join((enter) =>
         enter
           .append('text')
-          .text((d) => d.properties.name)
           .style('opacity', 0)
           .attr('y', '1.2em')
           .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
@@ -122,8 +120,8 @@
 
     select(layerMetrics)
       .selectAll('text')
+      .text((d) => formatByField(metric)(d.properties[metric]))
       .transition('move')
-      .text((d) => numberFormatter(d.properties[metric]))
       .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
   }
 </script>
@@ -137,5 +135,5 @@
   <g bind:this={layerMetrics} />
 </svg>
 {#if scale}
-<Legend {scale} />  
+<Legend {scale} {metric} />  
 {/if}
