@@ -1,45 +1,39 @@
 import {
   booleanContains,
   buffer,
-  Feature,
-  FeatureCollection,
   featureCollection,
-  Geometry,
   point,
-  rewind
 } from '@turf/turf';
 import booleanIntersects from '@turf/boolean-intersects';
 
 import combined from '../../data/combined.json';
-import { Metrics } from './metrics';
 
 class MunicipalityRepository {
   constructor() {
-    console.log('CONSTRUCTED!');
   }
 
-  public findById(id: number): Feature<Geometry, Metrics> {
+  public findById(id: number) {
     return combined.features.find((f) => f.id === id);
   }
 
-  public findByName(name: string): Feature<Geometry, Metrics> {
+  public findByName(name: string) {
     return combined.features.find((f) => f.properties.name === name);
   }
 
   public findAllNear(
-    f: Feature,
+    f,
     radius: number,
-  ): FeatureCollection<Geometry, Metrics> {
+  ) {
     const grown = buffer(f, radius, { units: 'kilometers' });
 
     const nearMunicipalities = combined.features.filter((m) =>
       booleanIntersects(m, grown),
     );
 
-    return featureCollection<Geometry, Metrics>(nearMunicipalities);
+    return featureCollection(nearMunicipalities);
   }
 
-  public async findByGeolocation(): Promise<Feature<Geometry, Metrics>> {
+  public async findByGeolocation() {
     if (navigator.geolocation) {
       return new Promise((resolve) =>
         navigator.geolocation.getCurrentPosition(

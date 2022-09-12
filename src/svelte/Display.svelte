@@ -3,13 +3,22 @@
   import Inspector from './Inspector.svelte';
   import { afterUpdate } from 'svelte';
   import { payload } from './store';
-  import { extent, format, interpolateRdYlGn, interpolateYlGn, scaleDiverging, select } from 'd3';
-  import { buffer, rewind } from '@turf/turf';
+  import {
+    extent,
+    interpolateRdYlGn,
+    interpolateYlGn,
+    scaleDiverging,
+    select,
+  } from 'd3';
+  import {
+    buffer,
+    rewind,
+  } from '@turf/turf';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
   import municipalityService from './municipality.service';
-  import {formatByField} from './number-format';
+  import { formatByField } from './number-format';
   export let params;
 
   let inspect = undefined;
@@ -27,7 +36,7 @@
   let scale;
   let fc;
 
-  payload.subscribe(() => inspect = undefined)
+  payload.subscribe(() => (inspect = undefined));
 
   afterUpdate(() => {
     municipality = municipalityService.findByName(params.municipalityName);
@@ -116,13 +125,19 @@
     select(layerLabels)
       .selectAll('text')
       .transition('move')
-      .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
+      .attr(
+        'transform',
+        (d) => `translate(${drawer.centroid(d)})`,
+      );
 
     select(layerMetrics)
       .selectAll('text')
       .text((d) => formatByField(metric)(d.properties[metric]))
       .transition('move')
-      .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
+      .attr(
+        'transform',
+        (d) => `translate(${drawer.centroid(d)})`,
+      );
   }
 </script>
 
@@ -135,5 +150,5 @@
   <g bind:this={layerMetrics} />
 </svg>
 {#if scale}
-<Legend {scale} {metric} />  
+  <Legend {scale} {metric} />
 {/if}

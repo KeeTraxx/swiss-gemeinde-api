@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
     "prebuild": "rimraf dist",
     "serve": "npm-run-all --parallel serve:*",
@@ -14,6 +15,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@tsconfig/svelte": "^3.0.0",
     "@turf/boolean-intersects": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "bulma": "^0.9.3",

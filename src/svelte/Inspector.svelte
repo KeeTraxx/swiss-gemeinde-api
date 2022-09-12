@@ -2,7 +2,7 @@
   import { _ } from 'svelte-i18n';
   import { payload, route, metric } from './store';
   export let inspect;
-  import {formatByField} from './number-format';
+  import { formatByField } from './number-format';
 
   function navigateToCompare() {
     $route = 'c';
