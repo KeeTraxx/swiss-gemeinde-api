@@ -5,8 +5,7 @@ export const metric = writable('census_population');
 export const payload = writable('Bern');
 export const route = writable('m');
 
-
-location.subscribe(l => {
+location.subscribe((l) => {
   const matches = l.match(/\/([a-z]+)\/(.*?)\/(.*)/);
   if (matches) {
     console.log('matches', matches);
@@ -16,7 +15,7 @@ location.subscribe(l => {
     }
 
     console.log(get(payload), matches[2]);
-    
+
     if (get(payload) !== matches[2]) {
       payload.set(decodeURIComponent(matches[2]));
     }
@@ -26,13 +25,11 @@ location.subscribe(l => {
     if (get(metric) !== matches[3]) {
       metric.set(decodeURIComponent(matches[3]));
     }
-
-    
   }
 });
 
-
-derived([route, payload, metric], a => a).subscribe(([newRoute, newPayload, newMetric]) => {
-  console.log([newRoute, newPayload, newMetric]);
-  push(`/${newRoute}/${encodeURIComponent(newPayload)}/${encodeURIComponent(newMetric)}`)
+derived([route, payload, metric], (a) => a).subscribe(
+  ([newRoute, newPayload, newMetric]) => {
+    console.log([newRoute, newPayload, newMetric]);
+    push(`/${newRoute}/${encodeURIComponent(newPayload)}/${encodeURIComponent(newMetric)}`)
 });
