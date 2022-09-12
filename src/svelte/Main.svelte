@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Router from 'svelte-spa-router';
+  import {location} from 'svelte-spa-router';
   import Display from './Display.svelte';
   import Toolbar from './Toolbar.svelte';
   import Comparison from './Comparison.svelte';
@@ -7,6 +9,18 @@
   import fr from './i18n/fr.json';
   import it from './i18n/it.json';
   import { addMessages, init } from 'svelte-i18n';
+  import {payload} from './store';
+  import municipalityService from './municipality.service';
+import { formatDefaultLocale } from 'd3';
+
+  formatDefaultLocale({
+    currency: ["", "CHF"],
+    decimal: ".",
+    grouping: [3],
+    thousands: "'",
+    minus: "-",
+    nan: "",
+  });
 
   addMessages('en', en);
   addMessages('de', de);
@@ -17,12 +31,24 @@
     fallbackLocale: 'de',
     initialLocale: window.localStorage.getItem('lang'),
   });
+
+  location.subscribe( async l => {
+    console.log('location', l);
+    if (l === '/') {
+      const f = await municipalityService.findByGeolocation();
+      $payload = f.properties.name;
+    }
+  })
+
+  const routes = {
+    '/c/:municipalityNames/:metric': Comparison,
+    '/m/:municipalityName/:metric': Display,
+  };
 </script>
 
 <main>
   <Toolbar />
-  <Display />
-  <Comparison />
+  <Router {routes} />
 </main>
 
 <style lang="scss">

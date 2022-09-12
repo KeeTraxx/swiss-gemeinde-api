@@ -1,33 +1,39 @@
 <script lang="ts">
+  import { afterUpdate } from 'svelte';
+
   import AutoComplete from 'simple-svelte-autocomplete';
   import { _, locale } from 'svelte-i18n';
-  import { query, metric, addToCompare } from './store';
+  import { route, metric, payload } from './store';
   import combined from '../../data/combined.json';
   import metricGroups from '../../data/metrics.json';
+  import municipalityService from './municipality.service';
 
   let isActive = false;
 
   let municipality = undefined;
-  let radius = 10;
   let lang = $locale;
-
-  let selectedMetric = 'census_population';
-  metric.subscribe((m) => (selectedMetric = m));
-
-  query.subscribe((q) => {
-    municipality = q.municipality;
-    radius = q.radius;
-  });
-
-  function send() {
-    console.log('sending', { municipality, radius });
-    query.set({ municipality, radius });
-  }
 
   function changeLang(l) {
     window.localStorage.setItem('lang', l);
-    locale.set(l);
+    $locale = l;
   }
+
+  function onSelectMunicipality(f) {
+    if (!f) {
+      return;
+    }
+    if ($route === 'c') {
+      if (!$payload.split('|').includes(f.properties.name)) {
+        $payload = `${$payload}|${f.properties.name}`;
+      }
+    } else {
+      $payload = f.properties.name;
+    }
+  }
+
+  afterUpdate(() => {
+    municipality = municipalityService.findByName($payload);
+  });
 </script>
 
 <nav class="navbar" aria-label="main navigation">
@@ -61,22 +67,8 @@
           items={combined.features}
           labelFunction={(f) => f.properties.name}
           bind:selectedItem={municipality}
-          onChange={send}
+          onChange={onSelectMunicipality}
         />
-      </div>
-      <div class="navbar-item">
-        <input
-          class="input"
-          type="number"
-          bind:value={radius}
-          placeholder="Radius"
-          style="max-width: 5em;"
-        />
-      </div>
-      <div class="navbar-item">
-        <button class="button" on:click={() => addToCompare(municipality)}
-          >{$_('ui.compare_municipality')}</button
-        >
       </div>
     </div>
 
@@ -84,13 +76,12 @@
       <div class="navbar-item">
         <select
           class="select"
-          bind:value={selectedMetric}
-          on:change={() => metric.set(selectedMetric)}
+          bind:value={$metric}
         >
           {#each metricGroups as group}
             <optgroup label={$_(`metrics.${group.key}`)}>
               {#each group.metrics as m}
-                <option value={m}>{$_(`metrics.${m}`)}</option>
+                <option value={m.name}>{$_(`metrics.${m.name}`)}</option>
               {/each}
             </optgroup>
           {/each}

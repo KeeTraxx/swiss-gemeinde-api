@@ -2,75 +2,251 @@
   {
     "key": "census",
     "metrics": [
-      "census_population",
-      "census_change_%",
-      "census_density_km2",
-      "census_foreigners_%"
+      {
+        "name": "census_population",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "census_change_%",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "census_density_km2",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "census_foreigners_%",
+        "format": ",.3r",
+        "unit": "%"
+      }
     ]
   },
   {
     "key": "age_distribution",
-    "metrics": ["age_0-19_%", "age_20-64_%", "age_65_over_%"]
+    "metrics": [
+      {
+        "name": "age_0-19_%",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "age_20-64_%",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "age_65_over_%",
+        "format": ",.3r",
+        "unit": "%"
+      }
+    ]
   },
   {
     "key": "population_movement",
     "metrics": [
-      "status_marriage_promille",
-      "status_divorce_promille",
-      "status_birthrate_promille",
-      "status_dying_promille"
+      {
+        "name": "status_marriage_promille",
+        "format": ",.3r",
+        "unit": "‰"
+      },
+      {
+        "name": "status_divorce_promille",
+        "format": ",.3r",
+        "unit": "‰"
+      },
+      {
+        "name": "status_birthrate_promille",
+        "format": ",.3r",
+        "unit": "‰"
+      },
+      {
+        "name": "status_dying_promille",
+        "format": ",.3r",
+        "unit": "‰"
+      }
     ]
   },
   {
     "key": "households",
-    "metrics": ["households_private", "household_size_average_persons"]
+    "metrics": [
+      {
+        "name": "households_private",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "household_size_average_persons",
+        "format": ",.3r",
+        "unit": ""
+      }
+    ]
   },
   {
     "key": "area",
     "metrics": [
-      "area_total_km2",
-      "area_residential_%",
-      "area_change_ha",
-      "area_agricultural_%",
-      "area_agricultural_change_ha",
-      "area_forest_%",
-      "area_unproductive_%"
+      {
+        "name": "area_total_km2",
+        "format": ",.3r",
+        "unit": "km²"
+      },
+      {
+        "name": "area_residential_%",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "area_change_ha",
+        "format": ",.3r",
+        "unit": "ha"
+      },
+      {
+        "name": "area_agricultural_%",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "area_agricultural_change_ha",
+        "format": ",.3r",
+        "unit": "ha"
+      },
+      {
+        "name": "area_forest_%",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "area_unproductive_%",
+        "format": ",.3r",
+        "unit": ""
+      }
     ]
   },
   {
     "key": "economy",
     "metrics": [
-      "economy_employed_total",
-      "economy_employed_sector1",
-      "economy_employed_sector2",
-      "economy_employed_sector3",
-      "economy_businesses_total",
-      "economy_businesses_sector1",
-      "economy_businesses_sector2",
-      "economy_businesses_sector3"
+      {
+        "name": "economy_employed_total",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_employed_sector1",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_employed_sector2",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_employed_sector3",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_businesses_total",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_businesses_sector1",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_businesses_sector2",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "economy_businesses_sector3",
+        "format": ",.3r",
+        "unit": ""
+      }
     ]
   },
   {
     "key": "condo",
     "metrics": [
-      "residential_empty_residences",
-      "residential_new_residents_per_1000"
+      {
+        "name": "residential_empty_residences",
+        "format": ",.3r",
+        "unit": ""
+      },
+      {
+        "name": "residential_new_residents_per_1000",
+        "format": ",.3r",
+        "unit": ""
+      }
     ]
   },
-  { "key": "social_security", "metrics": ["welfare_quote"] },
+  {
+    "key": "social_security",
+    "metrics": [
+      {
+        "name": "welfare_quote",
+        "format": ",.3r",
+        "unit": "%"
+      }
+    ]
+  },
   {
     "key": "voter_quotes",
     "metrics": [
-      "voter_quote_fdp",
-      "voter_quote_cvp",
-      "voter_quote_sp",
-      "voter_quote_svp",
-      "voter_quote_evp_csp",
-      "voter_quote_glp",
-      "voter_quote_bdp",
-      "voter_quote_pda",
-      "voter_quote_gps",
-      "voter_quote_other_right_parties"
+      {
+        "name": "voter_quote_fdp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_cvp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_sp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_svp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_evp_csp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_glp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_bdp",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_pda",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_gps",
+        "format": ",.3r",
+        "unit": "%"
+      },
+      {
+        "name": "voter_quote_other_right_parties",
+        "format": ",.3r",
+        "unit": "%"
+      }
     ]
   }
 ]

@@ -1,12 +1,30 @@
 <script lang="ts">
+  import { afterUpdate } from 'svelte';
   import { _ } from 'svelte-i18n';
-
-  let municipalities = [];
+  import { payload, route } from './store';
   import GeoJsonViewer from './GeoJsonViewer.svelte';
-  import { compare, removeFromCompare } from './store';
   import metricGroups from '../../data/metrics.json';
+  let municipalities = [];
+  export let params;
+  import municipalityService from './municipality.service';
+  import {formatByField} from './number-format';
 
-  compare.subscribe((m) => (municipalities = m));
+  afterUpdate(() => {
+    municipalities = params.municipalityNames.split('|')
+      .map(municipalityService.findByName);
+  });
+
+  function removeFromCompare(f) {
+    const newMunicipalities = params.municipalityNames.split('|')
+      .filter(m => m !== f.properties.name);
+    
+    if (newMunicipalities.length === 0) {
+      $route = 'm';
+    } else {
+      $payload = newMunicipalities.join('|');
+    }
+  }
+
 </script>
 
 {#if municipalities.length > 0}
@@ -45,9 +63,9 @@
         </tr>
         {#each group.metrics as metric}
           <tr>
-            <th>{$_(`metrics.${metric}`)}</th>
+            <th>{$_(`metrics.${metric.name}`)}</th>
             {#each municipalities as m}
-              <td class="metric">{m.properties[metric]}</td>
+              <td class="metric">{formatByField(metric.name)(m.properties[metric.name])}</td>
             {/each}
           </tr>
         {/each}

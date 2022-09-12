@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
     "prebuild": "rimraf dist",
     "serve": "npm-run-all --parallel serve:*",
@@ -14,12 +15,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@tsconfig/svelte": "^3.0.0",
     "@turf/boolean-intersects": "^6.5.0",
     "@turf/turf": "^6.5.0",
     "bulma": "^0.9.3",
     "d3": "^7.6.1",
     "simple-svelte-autocomplete": "^2.4.0",
-    "svelte-i18n": "^3.4.0"
+    "svelte-i18n": "^3.4.0",
+    "svelte-spa-router": "^3.3.0"
   },
   "devDependencies": {
     "@netlify/functions": "^1.0.0",

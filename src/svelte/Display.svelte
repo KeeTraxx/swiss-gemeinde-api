@@ -1,21 +1,32 @@
 <script lang="ts">
   import './Display.scss';
-  import { onMount } from 'svelte';
+  import Inspector from './Inspector.svelte';
+  import { afterUpdate } from 'svelte';
+  import { payload } from './store';
   import {
     extent,
-    format,
-    scaleLinear,
+    interpolateRdYlGn,
+    interpolateYlGn,
     scaleDiverging,
     select,
-    interpolateRdYlGn,
+type ExtendedFeature,
   } from 'd3';
+  import {
+    buffer,
+    rewind,
+    type Feature,
+    type FeatureCollection,
+    type Geometry,
+  } from '@turf/turf';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
-  import { results, metric, query } from './store';
-  import { derived, get } from 'svelte/store';
+  import municipalityService from './municipality.service';
+  import { formatByField } from './number-format';
+  import type { Metrics } from './metrics';
+  export let params;
 
-  const rAndM = derived([results, metric], (a) => a);
+  let inspect : Feature<Geometry, Metrics> = undefined;
 
   let svg;
   let layerBorders;
@@ -24,97 +35,119 @@
 
   const proj = geoMercator();
   const drawer = geoPath().projection(proj);
-  let scale = scaleLinear();
-  const numberFormatter = format(',');
 
-  onMount(() => {
-    rAndM.subscribe(([fc, m]) => {
-      if (!fc) {
-        return;
-      }
+  let municipality;
+  let metric : string;
+  let scale;
+  let fc: FeatureCollection<Geometry, Metrics>;
 
-      let ext = extent(fc.features, (d) => d.properties[m]);
-      if (ext[0] < 0) {
-        scale = scaleDiverging(interpolateRdYlGn).domain([ext[0], 0, ext[1]]);
-      } else {
-        scale = scaleLinear().domain(ext).range(['#fff', '#0f0']);
-      }
+  payload.subscribe(() => (inspect = undefined));
 
-      proj.fitSize([svg.clientWidth, svg.clientHeight], fc);
-      select(layerBorders)
-        .selectAll('path')
-        .data(fc.features, (d) => d.id)
-        .join((enter) =>
-          enter
-            .append('path')
-            .style('opacity', 0)
-            .on('click', (ev, d) =>
-              query.update((q) => ({
-                municipality: d,
-                radius: q.radius,
-              })),
-            )
-            .transition('fade')
-            .delay((d, i) => 300 + 10 * i)
-            .style('opacity', 1),
-        );
+  afterUpdate(() => {
+    municipality = municipalityService.findByName(params.municipalityName);
+    metric = params.metric;
+    if (!municipality || !metric) {
+      return;
+    }
+    fc = municipalityService.findAllNear(municipality, 15);
+    scale = getScale();
+    onResize();
 
-      select(layerLabels)
-        .selectAll('text')
-        .data(fc.features, (d) => d.id)
-        .join((enter) =>
-          enter
-            .append('text')
-            .text((d) => d.properties.name)
-            .style('opacity', 0)
-            .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
-            .transition('fade')
-            .delay((d, i) => 300 + 10 * i)
-            .style('opacity', 1),
-        );
+    select(layerBorders)
+      .selectAll<SVGPathElement, Feature<Geometry, Metrics>>('path')
+      .data(fc.features, (d) => d.id)
+      .join((enter) =>
+        enter
+          .append('path')
+          .style('opacity', 0)
+          .on('click', (ev, d) => {
+            // push(`/m/${encodeURIComponent(d.properties.name)}/${encodeURIComponent(metric)}`);
+            $payload = d.properties.name;
+            inspect = d;
+          })
+          .transition('fade')
+          .delay((d, i) => 300 + 10 * i)
+          .style('opacity', 1),
+      );
 
-      select(layerMetrics)
-        .selectAll('text')
-        .data(fc.features, (d) => d.id)
-        .join((enter) =>
-          enter
-            .append('text')
-            .text((d) => d.properties.name)
-            .style('opacity', 0)
-            .attr('y', '1.2em')
-            .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
-            .transition('fade')
-            .delay((d, i) => 300 + 10 * i)
-            .style('opacity', 1),
-        );
-      redraw();
-    });
+    select(layerLabels)
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
+      .data(fc.features, (d) => d.id)
+      .join((enter) =>
+        enter
+          .append('text')
+          .text((d) => d.properties.name)
+          .style('opacity', 0)
+          .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`)
+          .transition('fade')
+          .delay((d, i) => 300 + 10 * i)
+          .style('opacity', 1),
+      );
+
+    select(layerMetrics)
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
+      .data(fc.features, (d) => d.id)
+      .join((enter) =>
+        enter
+          .append('text')
+          .style('opacity', 0)
+          .attr('y', '1.2em')
+          .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`)
+          .transition('fade')
+          .delay((d, i) => 300 + 10 * i)
+          .style('opacity', 1),
+      );
+    redraw();
   });
+
+  function getScale() {
+    let ext = extent(fc.features, (d) => d.properties[metric]);
+    if (ext[0] < 0) {
+      return scaleDiverging(interpolateRdYlGn).domain([ext[0], 0, ext[1]]);
+    } else {
+      return scaleDiverging(interpolateYlGn).domain([
+        ext[0],
+        (ext[0] + ext[1]) / 2,
+        ext[1],
+      ]);
+    }
+  }
+
+  function onResize() {
+    const growed = buffer(municipality, 8, { units: 'kilometers' });
+    rewind(growed, { reverse: true, mutate: true });
+    proj.fitSize([svg.clientWidth, svg.clientHeight], growed);
+    redraw();
+  }
 
   function redraw() {
     select(layerBorders)
-      .selectAll('path')
+      .selectAll<SVGPathElement, Feature<Geometry, Metrics>>('path')
       .transition('move')
-      .attr('d', (d) => drawer(d))
-      .style('fill', (d) => scale(d.properties[get(metric)]));
+      .attr('d', (d) => drawer(d as ExtendedFeature))
+      .style('fill', (d) => scale(d.properties[metric]));
 
     select(layerLabels)
-      .selectAll('text')
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
       .transition('move')
-      .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
+      .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`);
 
     select(layerMetrics)
-      .selectAll('text')
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
+      .text((d) => formatByField(metric)(d.properties[metric]))
       .transition('move')
-      .text((d) => numberFormatter(d.properties[get(metric)]))
-      .attr('transform', (d) => `translate(${drawer.centroid(d)})`);
+      .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`);
   }
 </script>
 
-<svelte:window />
+<svelte:window on:resize={() => onResize()} />
+
+<Inspector inspect={inspect} />
 <svg bind:this={svg}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />
   <g bind:this={layerMetrics} />
 </svg>
-<Legend {scale} />
+{#if scale}
+  <Legend {scale} {metric} />
+{/if}
