@@ -9,19 +9,24 @@
     interpolateYlGn,
     scaleDiverging,
     select,
+type ExtendedFeature,
   } from 'd3';
   import {
     buffer,
     rewind,
+    type Feature,
+    type FeatureCollection,
+    type Geometry,
   } from '@turf/turf';
   import { geoPath } from 'd3';
   import { geoMercator } from 'd3';
   import Legend from './Legend.svelte';
   import municipalityService from './municipality.service';
   import { formatByField } from './number-format';
+  import type { Metrics } from './metrics';
   export let params;
 
-  let inspect = undefined;
+  let inspect : Feature<Geometry, Metrics> = undefined;
 
   let svg;
   let layerBorders;
@@ -32,9 +37,9 @@
   const drawer = geoPath().projection(proj);
 
   let municipality;
-  let metric;
+  let metric : string;
   let scale;
-  let fc;
+  let fc: FeatureCollection<Geometry, Metrics>;
 
   payload.subscribe(() => (inspect = undefined));
 
@@ -49,7 +54,7 @@
     onResize();
 
     select(layerBorders)
-      .selectAll('path')
+      .selectAll<SVGPathElement, Feature<Geometry, Metrics>>('path')
       .data(fc.features, (d) => d.id)
       .join((enter) =>
         enter
@@ -66,28 +71,28 @@
       );
 
     select(layerLabels)
-      .selectAll('text')
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
       .data(fc.features, (d) => d.id)
       .join((enter) =>
         enter
           .append('text')
           .text((d) => d.properties.name)
           .style('opacity', 0)
-          .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
+          .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`)
           .transition('fade')
           .delay((d, i) => 300 + 10 * i)
           .style('opacity', 1),
       );
 
     select(layerMetrics)
-      .selectAll('text')
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
       .data(fc.features, (d) => d.id)
       .join((enter) =>
         enter
           .append('text')
           .style('opacity', 0)
           .attr('y', '1.2em')
-          .attr('transform', (d) => `translate(${drawer.centroid(d)})`)
+          .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`)
           .transition('fade')
           .delay((d, i) => 300 + 10 * i)
           .style('opacity', 1),
@@ -117,33 +122,27 @@
 
   function redraw() {
     select(layerBorders)
-      .selectAll('path')
+      .selectAll<SVGPathElement, Feature<Geometry, Metrics>>('path')
       .transition('move')
-      .attr('d', (d) => drawer(d))
+      .attr('d', (d) => drawer(d as ExtendedFeature))
       .style('fill', (d) => scale(d.properties[metric]));
 
     select(layerLabels)
-      .selectAll('text')
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
       .transition('move')
-      .attr(
-        'transform',
-        (d) => `translate(${drawer.centroid(d)})`,
-      );
+      .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`);
 
     select(layerMetrics)
-      .selectAll('text')
+      .selectAll<SVGTextElement, Feature<Geometry, Metrics>>('text')
       .text((d) => formatByField(metric)(d.properties[metric]))
       .transition('move')
-      .attr(
-        'transform',
-        (d) => `translate(${drawer.centroid(d)})`,
-      );
+      .attr('transform', (d) => `translate(${drawer.centroid(d as ExtendedFeature)})`);
   }
 </script>
 
 <svelte:window on:resize={() => onResize()} />
 
-<Inspector {inspect} {metric} />
+<Inspector inspect={inspect} />
 <svg bind:this={svg}>
   <g bind:this={layerBorders} />
   <g bind:this={layerLabels} />

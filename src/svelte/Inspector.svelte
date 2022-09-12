@@ -1,8 +1,10 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
   import { payload, route, metric } from './store';
-  export let inspect;
+  export let inspect: Feature<Geometry, Metrics>;
   import { formatByField } from './number-format';
+  import type { Feature, Geometry } from '@turf/turf';
+  import type { Metrics } from './metrics';
 
   function navigateToCompare() {
     $route = 'c';

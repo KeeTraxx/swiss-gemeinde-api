@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {afterUpdate} from 'svelte';
+  import { afterUpdate } from 'svelte';
 
   import AutoComplete from 'simple-svelte-autocomplete';
   import { _, locale } from 'svelte-i18n';
@@ -13,9 +13,6 @@
   let municipality = undefined;
   let lang = $locale;
 
-  export let selectedMetric = 'census_population';
-  metric.subscribe((m) => (selectedMetric = m));
-
   function changeLang(l) {
     window.localStorage.setItem('lang', l);
     $locale = l;
@@ -27,7 +24,7 @@
     }
     if ($route === 'c') {
       if (!$payload.split('|').includes(f.properties.name)) {
-        $payload = `${$payload}|${f.properties.name}`
+        $payload = `${$payload}|${f.properties.name}`;
       }
     } else {
       $payload = f.properties.name;
@@ -79,8 +76,7 @@
       <div class="navbar-item">
         <select
           class="select"
-          bind:value={selectedMetric}
-          on:change={() => metric.set(selectedMetric)}
+          bind:value={$metric}
         >
           {#each metricGroups as group}
             <optgroup label={$_(`metrics.${group.key}`)}>

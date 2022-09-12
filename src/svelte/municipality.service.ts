@@ -1,3 +1,5 @@
+import type { Feature, FeatureCollection, Geometry } from '@turf/turf';
+
 import {
   booleanContains,
   buffer,
@@ -6,24 +8,23 @@ import {
 } from '@turf/turf';
 import booleanIntersects from '@turf/boolean-intersects';
 
-import combined from '../../data/combined.json';
+import data from '../../data/combined.json';
+import type { Metrics } from './metrics';
 
+const combined: FeatureCollection<Geometry, Metrics> = data as any;
 class MunicipalityRepository {
   constructor() {
   }
 
-  public findById(id: number) {
+  public findById(id: number): Feature<Geometry, Metrics> {
     return combined.features.find((f) => f.id === id);
   }
 
-  public findByName(name: string) {
+  public findByName(name: string): Feature<Geometry, Metrics> {
     return combined.features.find((f) => f.properties.name === name);
   }
 
-  public findAllNear(
-    f,
-    radius: number,
-  ) {
+  public findAllNear(f, radius: number): FeatureCollection<Geometry, Metrics> {
     const grown = buffer(f, radius, { units: 'kilometers' });
 
     const nearMunicipalities = combined.features.filter((m) =>
@@ -33,7 +34,7 @@ class MunicipalityRepository {
     return featureCollection(nearMunicipalities);
   }
 
-  public async findByGeolocation() {
+  public async findByGeolocation(): Promise<Feature<Geometry, Metrics>> {
     if (navigator.geolocation) {
       return new Promise((resolve) =>
         navigator.geolocation.getCurrentPosition(
@@ -57,7 +58,6 @@ class MunicipalityRepository {
         ),
       );
     } else {
-      console.log('found?fallback');
       return combined.features.find((d) => d.properties.name === 'Bern');
     }
   }
