@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { push } from 'svelte-spa-router';
   import './Display.scss';
   import Inspector from './Inspector.svelte';
   import { afterUpdate } from 'svelte';
@@ -29,11 +28,12 @@
   let scale;
   let fc;
 
+  payload.subscribe(() => inspect = undefined)
+
   afterUpdate(() => {
     municipality = municipalityService.findByName(params.municipalityName);
     metric = params.metric;
     if (!municipality || !metric) {
-      console.log('kt');
       return;
     }
     fc = municipalityService.findAllNear(municipality, 15);

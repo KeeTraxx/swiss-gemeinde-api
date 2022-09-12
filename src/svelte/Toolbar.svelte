@@ -9,8 +9,6 @@
   import metricGroups from '../../data/metrics.json';
   import municipalityService from './municipality.service';
 
-  export let municipalityName;
-
   let isActive = false;
 
   let municipality = undefined;

@@ -1,11 +1,9 @@
 <script lang="ts">
   import { afterUpdate } from 'svelte';
   import { _ } from 'svelte-i18n';
-
+  import { payload, route } from './store';
   import GeoJsonViewer from './GeoJsonViewer.svelte';
-  import { compare, removeFromCompare, addToCompare } from './store';
   import metricGroups from '../../data/metrics.json';
-  import combined from '../../data/combined.json';
   let municipalities = [];
   export let params;
   import municipalityService from './municipality.service';
@@ -14,6 +12,17 @@
     municipalities = params.municipalityNames.split('|')
       .map(municipalityService.findByName);
   });
+
+  function removeFromCompare(f) {
+    const newMunicipalities = params.municipalityNames.split('|')
+      .filter(m => m !== f.properties.name);
+    
+    if (newMunicipalities.length === 0) {
+      $route = 'm';
+    } else {
+      $payload = newMunicipalities.join('|');
+    }
+  }
 
 </script>
 

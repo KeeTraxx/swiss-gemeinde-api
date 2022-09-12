@@ -1,12 +1,11 @@
 <script lang="ts">
-  import {link} from 'svelte-spa-router';
   import { _ } from 'svelte-i18n';
-  import { addToCompare, compare, payload, route, metric } from './store';
+  import { payload, route, metric } from './store';
   export let inspect;
 
   function navigateToCompare() {
     $route = 'c';
-    $payload = $compare.map(f => encodeURIComponent(f.properties.name)).join('|');
+    $payload = inspect.properties.name;
   }
 </script>
 
@@ -14,11 +13,8 @@
   <div class="container">
     <h3>{inspect.properties.name}</h3>
     <p>{inspect.properties[$metric]}</p>
-    <button class="button" on:click={() => addToCompare(inspect)}>
+    <button class="button" on:click={() => navigateToCompare()}>
       {$_('ui.compare_municipality')}
-    </button>
-    <button class="button" on:click={navigateToCompare}>
-      To comparison
     </button>
   </div>
 {/if}

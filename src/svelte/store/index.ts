@@ -1,34 +1,38 @@
 import { push, location } from 'svelte-spa-router';
-import {
-  Feature,
-  MultiPolygon,
-} from '@turf/turf';
-import { writable, derived } from 'svelte/store';
-import { Metrics } from '../metrics';
-
-export const compare = writable<Array<Feature<MultiPolygon, Metrics>>>([]);
-
-export function addToCompare(municipality: Feature<MultiPolygon, Metrics>) {
-  compare.update((all) =>
-    !all.includes(municipality) ? [...all, municipality] : all,
-  );
-}
-
-export function removeFromCompare(
-  municipality: Feature<MultiPolygon, Metrics>,
-) {
-  compare.update((all) => all.filter((d) => d.id !== municipality.id));
-}
+import { writable, derived, get } from 'svelte/store';
 
 export const metric = writable('census_population');
-
 export const payload = writable('Bern');
+export const route = writable('m');
 
-export const route = writable( 'm');
 
-derived([route, payload, metric], a => {
-  console.log('a', a);
-  return a
-} ).subscribe(([newRoute, newPayload, newMetric]) => {
+location.subscribe(l => {
+  const matches = l.match(/\/([a-z]+)\/(.*?)\/(.*)/);
+  if (matches) {
+    console.log('matches', matches);
+    console.log('match', get(route), matches[1]);
+    if (get(route) !== matches[1]) {
+      route.set(decodeURIComponent(matches[1]));
+    }
+
+    console.log(get(payload), matches[2]);
+    
+    if (get(payload) !== matches[2]) {
+      payload.set(decodeURIComponent(matches[2]));
+    }
+
+    console.log(get(metric), matches[3]);
+
+    if (get(metric) !== matches[3]) {
+      metric.set(decodeURIComponent(matches[3]));
+    }
+
+    
+  }
+});
+
+
+derived([route, payload, metric], a => a).subscribe(([newRoute, newPayload, newMetric]) => {
+  console.log([newRoute, newPayload, newMetric]);
   push(`/${newRoute}/${encodeURIComponent(newPayload)}/${encodeURIComponent(newMetric)}`)
 });
