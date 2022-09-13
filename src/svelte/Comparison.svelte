@@ -1,4 +1,5 @@
 <script lang="ts">
+  import AutoComplete from 'simple-svelte-autocomplete';
   import { afterUpdate } from 'svelte';
   import { _ } from 'svelte-i18n';
   import { payload, route } from './store';
@@ -7,17 +8,22 @@
   let municipalities = [];
   export let params;
   import municipalityService from './municipality.service';
-  import {formatByField} from './number-format';
+  import { formatByField } from './number-format';
+  import combined from '../../data/combined.json';
+
+  let s;
 
   afterUpdate(() => {
-    municipalities = params.municipalityNames.split('|')
+    municipalities = params.municipalityNames
+      .split('|')
       .map(municipalityService.findByName);
   });
 
   function removeFromCompare(f) {
-    const newMunicipalities = params.municipalityNames.split('|')
-      .filter(m => m !== f.properties.name);
-    
+    const newMunicipalities = params.municipalityNames
+      .split('|')
+      .filter((m) => m !== f.properties.name);
+
     if (newMunicipalities.length === 0) {
       $route = 'm';
     } else {
@@ -25,62 +31,76 @@
     }
   }
 
+  function onSelectMunicipality(f) {
+    console.log(f);
+    if (!f) {
+      return;
+    }
+    if (!$payload.split('|').includes(f.properties.name)) {
+      s = null;
+      $payload = `${$payload}|${f.properties.name}`;
+    }
+  }
 </script>
 
-{#if municipalities.length > 0}
-  <aside class="container">
-    <table class="table">
-      <tr>
-        <th>&nbsp;</th>
-        {#each municipalities as m}
-          <td class="metric">{m.properties.name}</td>
-        {/each}
-      </tr>
-      <tr>
-        <th>&nbsp;</th>
-        {#each municipalities as m}
-          <td class="metric">
-            <button
-              class="button is-danger"
-              on:click={() => removeFromCompare(m)}>Entfernen</button
-            >
-          </td>
-        {/each}
-      </tr>
-      <tr>
-        <th>&nbsp;</th>
-        {#each municipalities as m}
-          <td>
-            <GeoJsonViewer geoJson={m} />
-          </td>
-        {/each}
-      </tr>
-      {#each metricGroups as group}
-        <tr>
-          <th style="padding-top: 1.5em;" colspan="99">
-            {$_(`metrics.${group.key}`)}
-          </th>
-        </tr>
-        {#each group.metrics as metric}
-          <tr>
-            <th>{$_(`metrics.${metric.name}`)}</th>
-            {#each municipalities as m}
-              <td class="metric">{formatByField(metric.name)(m.properties[metric.name])}</td>
-            {/each}
-          </tr>
-        {/each}
+<aside class="container">
+  <table class="table">
+    <tr>
+      <th>&nbsp;</th>
+      {#each municipalities as m}
+        <td class="metric">{m.properties.name}</td>
       {/each}
-    </table>
-  </aside>
-{/if}
+      <th>
+        <AutoComplete
+          items={combined.features}
+          labelFunction={(f) => f.properties.name}
+          onChange={onSelectMunicipality}
+          selectedItem={s}
+          placeholder={$_('ui.compare_municipality')}
+        />
+      </th>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      {#each municipalities as m}
+        <td class="metric">
+          <button class="button is-danger" on:click={() => removeFromCompare(m)}
+            >Entfernen</button
+          >
+        </td>
+      {/each}
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      {#each municipalities as m}
+        <td>
+          <GeoJsonViewer geoJson={m} />
+        </td>
+      {/each}
+    </tr>
+    {#each metricGroups as group}
+      <tr>
+        <th style="padding-top: 1.5em;" colspan="99">
+          {$_(`metrics.${group.key}`)}
+        </th>
+      </tr>
+      {#each group.metrics as metric}
+        <tr>
+          <th>{$_(`metrics.${metric.name}`)}</th>
+          {#each municipalities as m}
+            <td class="metric"
+              >{formatByField(metric.name)(m.properties[metric.name])}</td
+            >
+          {/each}
+        </tr>
+      {/each}
+    {/each}
+  </table>
+</aside>
 
 <style lang="scss">
   aside {
-    position: fixed;
-    top: 4em;
-    left: 0;
-    bottom: 0;
-    overflow-y: auto;
+    margin: 0;
   }
   td.metric {
     text-align: right;
@@ -95,6 +115,7 @@
     position: sticky;
     top: 0;
     background-color: white;
+    min-width: 10em;
   }
   tr:nth-child(2) > * {
     position: sticky;
