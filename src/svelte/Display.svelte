@@ -142,6 +142,10 @@ type ExtendedFeature,
 
 <svelte:window on:resize={() => onResize()} />
 
+<svelte:head>
+  <title>SGI - {municipality?.properties?.name}</title>
+</svelte:head>
+
 <Inspector inspect={inspect} />
 <svg bind:this={svg}>
   <g bind:this={layerBorders} />

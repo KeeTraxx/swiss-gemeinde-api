@@ -43,12 +43,16 @@
   }
 </script>
 
+<svelte:head>
+  <title>SGI - {$_('ui.compare_municipality')}</title>
+</svelte:head>
+
 <aside class="container">
   <table class="table">
     <tr>
       <th>&nbsp;</th>
       {#each municipalities as m}
-        <td class="metric">{m.properties.name}</td>
+        <th class="metric">{m.properties.name}</th>
       {/each}
       <th>
         <AutoComplete
@@ -80,7 +84,7 @@
     </tr>
     {#each metricGroups as group}
       <tr>
-        <th style="padding-top: 1.5em;" colspan="99">
+        <th style="padding-top: 1.5em;">
           {$_(`metrics.${group.key}`)}
         </th>
       </tr>
@@ -111,16 +115,24 @@
     width: 10em;
   }
 
+  th:nth-child(1) {
+    position: sticky;
+    left: 0;
+    background-color: white;
+  }
+
   tr:nth-child(1) > * {
     position: sticky;
     top: 0;
     background-color: white;
     min-width: 10em;
+    z-index: 1;
   }
   tr:nth-child(2) > * {
     position: sticky;
     top: 2em;
     background-color: white;
+    z-index: 1;
   }
   tr:nth-child(3) > * {
     position: sticky;
